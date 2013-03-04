@@ -3,6 +3,7 @@
 //So rather than rename the app everytime I change the code significantly, I will create a fork, and call it Shakey 1.8 and so on
 //Dennistest
 //testcommentistest
+//branch commit test
 package com.shakey;
 
 import android.os.Bundle;
