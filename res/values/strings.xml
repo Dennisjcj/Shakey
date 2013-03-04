@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Shakey</string>
+    <string name="menu_settings">Settings</string>
+    <string name="yaxis">Y Axis</string>
+    <string name="Instructions">Press to choose music</string>
+    <string name="min">Minimum</string>
+    <string name="mili">Time (ms)  </string>
+    <string name="enter">Enter</string>
+    <string name="defaulty">Default Settings - Minimum: 0.2; Time: 300</string>
+    <string name="face">Face</string>
+    <string name="thesevalues">Type the values in the boxes, then hit Enter.</string>
+    <string name="xaxis">X Axis</string>
+    <string name="zaxis">Z Axis</string>
+    <string name="Volume">Volume</string>
+    <string name="Music">Music</string>
+    <string name="Manual">Manual</string>
+    <string name="Auto">Auto</string>
+    <string name="Play">Play</string>
+    <string name="Pause">Pause</string>
+    <string name="Kill">Kill</string>
+    
+
+</resources>
