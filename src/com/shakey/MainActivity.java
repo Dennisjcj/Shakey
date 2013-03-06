@@ -110,6 +110,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v) {
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
+				
+				ImageView iv = (ImageView)findViewById(R.id.image);
+				iv.setImageResource(R.drawable.smileyface);
+				iv.setVisibility(View.VISIBLE); 
 			}
 		});
 
@@ -117,6 +121,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v) {
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
+				
+				ImageView iv = (ImageView)findViewById(R.id.image);
+				iv.setImageResource(R.drawable.smileyface);
+				iv.setVisibility(View.INVISIBLE); 
 			}
 		});
 	}
