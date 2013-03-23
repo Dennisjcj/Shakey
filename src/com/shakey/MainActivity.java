@@ -1,13 +1,14 @@
 //This is Shakey version 1.8; 
 //From now on, I am going to do all the development as forks from this Parent on GitHub.
 //So rather than rename the app everytime I change the code significantly, I will create a fork, and call it Shakey 1.8 and so on
-//Dennistest
-//testcommentistest
+
+//This app turns the volume of the device up when the phone is moving, and off when it is still
 package com.shakey;
 
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -23,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.media.AudioManager;
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener {
@@ -35,6 +37,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	private double MINIMUM = 0.3;
 	private int militime = 5000;
+	
+	//bluetooth stuff
+	private BluetoothAdapter mBluetoothAdapter;	
+	private boolean hasBluetooth; 
+	private final int REQUEST_ENABLE_BT = 333; //Bluetooth enable request ID
 
 	long start = 0;
 	long end = 0;
@@ -78,6 +85,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		EditText mili = (EditText) findViewById(R.id.editTextmili);
 		min.setText("0.3");
 		mili.setText("5000");
+		
+		//BluetoothSetup
+		setUpBlueTooth();
 
 		enter.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -224,6 +234,23 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 
+	}
+	private void setUpBlueTooth()
+	{
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if(mBluetoothAdapter == null){
+			hasBluetooth = false;
+			//Device does not support Bluetooth
+			Toast.makeText(this, "This device does not support Bluetooth. Running teethless", Toast.LENGTH_SHORT).show();
+			//^ shows quick message
+		}
+		else{
+			hasBluetooth = true;
+		}
+		if(!mBluetoothAdapter.isEnabled()){
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+		}
 	}
 
 }
