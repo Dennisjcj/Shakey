@@ -247,9 +247,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		else{
 			hasBluetooth = true;
 		}
-		if(!mBluetoothAdapter.isEnabled()){
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+		if(!mBluetoothAdapter.isEnabled()){//if the bluetooth is not enabled
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);//sets up an intent for bluetooth enabling request
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);//sends the intent to OS
 		}
 	}
 
