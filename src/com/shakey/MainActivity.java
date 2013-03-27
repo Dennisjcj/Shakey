@@ -1,4 +1,4 @@
-//This is Shakey version 1.8; 
+//This is Shakey version Animated Video instead of picture; 
 //From now on, I am going to do all the development as forks from this Parent on GitHub.
 //So rather than rename the app everytime I change the code significantly, I will create a fork, and call it Shakey 1.8 and so on
 //Dennistest
@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.VideoView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.media.AudioManager;
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener{
+	
 	private float mLastY;
 	private boolean mInitialized;
 	private SensorManager mSensorManager;
@@ -41,6 +42,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	long end = 0;
 	long duration = 0;
 	
+	boolean videoover = true;
+	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	
 	@SuppressWarnings("deprecation")
@@ -49,6 +52,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main); 
@@ -111,19 +115,21 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
 				
-				ImageView iv = (ImageView)findViewById(R.id.image);
-				iv.setImageResource(R.drawable.smileyface);
-				iv.setVisibility(View.VISIBLE); 
+				VideoView iv = (VideoView)findViewById(R.id.image);
+				iv.setVideoPath("/sdcard/Quickwho.mp4");
+			    iv.start();	
+			    iv.setVisibility(View.VISIBLE); 
 			}
 		});
 
 		pause.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View v) {
+			public void onClick(View v){
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
 				
-				ImageView iv = (ImageView)findViewById(R.id.image);
-				iv.setImageResource(R.drawable.smileyface);
+				VideoView iv = (VideoView)findViewById(R.id.image);
+				iv.setVideoPath("/sdcard/Quickwho.mp4");
+				iv.pause();
 				iv.setVisibility(View.INVISIBLE); 
 			}
 		});
@@ -182,12 +188,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onSensorChanged(SensorEvent event) {
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
-			ImageView iv = (ImageView)findViewById(R.id.image);
+			VideoView iv = (VideoView)findViewById(R.id.image);
 			float y = event.values[axisChooser]; 
 		
 			if (!mInitialized) {
 				mLastY = y;
-				iv.setImageResource(R.drawable.smileyface);
+				iv.setVideoPath("/sdcard/Quickwho.mp4");
 				tvY.setText("0.0");
 				mInitialized = true;
 			} 
@@ -199,6 +205,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				tvY.setText(Float.toString(deltaY)); 
 				if (deltaY > 0) {
 					iv.setVisibility(View.VISIBLE); 
+					iv.start();
 					musiccommand.putExtra("command", "play");
 					MainActivity.this.sendBroadcast(musiccommand);
 					start = System.nanoTime();
@@ -208,6 +215,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					duration = end - start;		
 					if(duration/1000000 > militime){ 
 						iv.setVisibility(View.INVISIBLE);
+						iv.stopPlayback();
 						musiccommand.putExtra("command", "pause");
 						MainActivity.this.sendBroadcast(musiccommand);
 					}
