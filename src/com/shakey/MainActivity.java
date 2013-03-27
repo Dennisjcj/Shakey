@@ -174,7 +174,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer,
 				SensorManager.SENSOR_DELAY_NORMAL);
-		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 
 	protected void onPause() {
@@ -247,7 +247,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
+		//am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	private void setUpBlueTooth()
 	{
