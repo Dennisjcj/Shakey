@@ -93,6 +93,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		//BluetoothSetup
 		setUpBlueTooth();
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 		//endBluetoothstuff
 
 		enter.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +174,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer,
 				SensorManager.SENSOR_DELAY_NORMAL);
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 
 	protected void onPause() {
@@ -240,6 +242,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	private void setUpBlueTooth()
 	{
