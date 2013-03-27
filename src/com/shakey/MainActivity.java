@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -37,12 +38,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	private double MINIMUM = 0.3;
 	private int militime = 5000;
+	private AudioManager am ;
 	
 	//bluetooth stuff
 	private BluetoothAdapter mBluetoothAdapter;	
 	private boolean hasBluetooth; 
 	private final int REQUEST_ENABLE_BT = 333; //Bluetooth enable request ID
-
+	private ComponentName mRemoteControlResponder;
+	//end bluetooth stuff
+	
 	long start = 0;
 	long end = 0;
 	long duration = 0;
@@ -88,6 +92,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		//BluetoothSetup
 		setUpBlueTooth();
+		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
+		//endBluetoothstuff
 
 		enter.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -181,7 +187,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onProgressChanged(SeekBar v, int progress, boolean isUser) {
 		volume = (double) (progress) / 100.0;
-		AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		int maxv = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		am.setStreamVolume(AudioManager.STREAM_MUSIC,
 				(int) (volume * (double) (maxv)), 0);
