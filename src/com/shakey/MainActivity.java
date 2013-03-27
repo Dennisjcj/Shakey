@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		//BluetoothSetup
 		setUpBlueTooth();
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
-		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 		//endBluetoothstuff
 
 		enter.setOnClickListener(new View.OnClickListener() {
