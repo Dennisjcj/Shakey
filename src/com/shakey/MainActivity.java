@@ -93,7 +93,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		//BluetoothSetup
 		setUpBlueTooth();
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
-		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 		//endBluetoothstuff
 
 		enter.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +175,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer,
 				SensorManager.SENSOR_DELAY_NORMAL);
-		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 
 	protected void onPause() {
@@ -189,7 +190,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onProgressChanged(SeekBar v, int progress, boolean isUser) {
 		volume = (double) (progress) / 100.0;
-		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		int maxv = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		am.setStreamVolume(AudioManager.STREAM_MUSIC,
 				(int) (volume * (double) (maxv)), 0);
@@ -247,7 +247,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		//am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	private void setUpBlueTooth()
 	{
