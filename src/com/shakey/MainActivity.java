@@ -9,6 +9,7 @@ package com.shakey;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -28,7 +31,7 @@ import android.widget.TextView;
 import android.media.AudioManager;
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener{
-	
+
 	private float mLastY;
 	private boolean mInitialized;
 	private SensorManager mSensorManager;
@@ -55,8 +58,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
 		setContentView(R.layout.activity_main); 
 		final Button enter = (Button) findViewById(R.id.buttonenter); 
 		final Button music = (Button) findViewById(R.id.buttonmusic); 
