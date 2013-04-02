@@ -6,7 +6,10 @@
 //branch commit test
 package com.shakey;
 
+import java.io.File;
+
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
@@ -48,6 +51,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	
+	
+	
 	@SuppressWarnings("deprecation")
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
@@ -56,7 +61,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		
+		File direct = new File(Environment.getExternalStorageDirectory() + "/ShakeyVideoFolder");
+		if(!direct.exists()){
+		    if(direct.mkdir()) {
+		       //directory is created;
+		    }
+	    }
+		File drwho = new File(direct, smileyface);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main); 
 		final Button enter = (Button) findViewById(R.id.buttonenter); 
