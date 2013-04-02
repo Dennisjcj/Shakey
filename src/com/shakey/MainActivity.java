@@ -6,10 +6,8 @@
 //branch commit test
 package com.shakey;
 
-import java.io.File;
-
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
@@ -50,9 +48,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	int videoplay = 0;
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
-	
-	
-	
 	@SuppressWarnings("deprecation")
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
@@ -61,14 +56,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		File direct = new File(Environment.getExternalStorageDirectory() + "/ShakeyVideoFolder");
-		if(!direct.exists()){
-		    if(direct.mkdir()) {
-		       //directory is created;
-		    }
-	    }
-		File drwho = new File(direct, smileyface);
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main); 
 		final Button enter = (Button) findViewById(R.id.buttonenter); 
@@ -128,27 +115,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			}
 		});
 		
-		final VideoView iv = (VideoView)findViewById(R.id.image);
-		iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
-	    //iv.setVisibility(View.VISIBLE); 
+		final VideoView iv = (VideoView)findViewById(R.id.video);
+		String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
 
-		//iv.start();
-		//iv.pause();
+		iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
+
 		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				//VideoView iv = (VideoView)findViewById(R.id.image);
-				//iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
-				//if(videostart == true){
-					//iv.start();
-					//videostart = false;
-				//}
-				
-
-				//iv.resume();
 				iv.start();
-
-				//iv.resume();
 			    iv.setVisibility(View.VISIBLE); 
 				videoplay = 1;
 				
@@ -158,13 +133,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		});
 		pause.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				//VideoView iv = (VideoView)findViewById(R.id.image);
-				//iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
-				//if(iv.isPlaying()){
-					//videoposition = iv.getCurrentPosition();
-				//}
-				//iv.pause();
-				//videoposition = iv.getCurrentPosition();
 				iv.suspend();
 				iv.setVisibility(View.INVISIBLE); 
 				videoplay = 2;
@@ -173,25 +141,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				MainActivity.this.sendBroadcast(musiccommand);
 			}
 		});
-		//if(videostart == true){
-		//final VideoView iv = (VideoView)findViewById(R.id.image);
-		//iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
-			//videostart = false;
-		//}
-		//if(videoplay == 1){
-			//iv.seekTo(videoposition);
-		    //iv.start();
-		    //iv.setVisibility(View.VISIBLE); 
-		//}
-		//else if (videoplay == 2){
-			//videoposition = iv.getCurrentPosition();
-			//iv.pause();
-			//iv.setVisibility(View.INVISIBLE);
-		//}
+		
 	}
-	
-	
-	
 	
 	public void onRadioButtonClicked(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
@@ -246,13 +197,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onSensorChanged(SensorEvent event) {
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
-			VideoView iv = (VideoView)findViewById(R.id.image);
+			final VideoView iv = (VideoView)findViewById(R.id.video);
 			
 			float y = event.values[axisChooser]; 
 			if (!mInitialized) {
 				mLastY = y;
-				iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
-
+				String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
+				iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
 				tvY.setText("0.0");
 				mInitialized = true;
 			} 
