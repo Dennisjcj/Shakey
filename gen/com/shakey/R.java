@@ -7,6 +7,8 @@
 
 package com.shakey;
 
+import android.net.Uri;
+
 public final class R {
     public static final class attr {
     }
@@ -14,6 +16,9 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
         public static final int smileyface=0x7f020001;
         public static final int smileyfaceisreal=0x7f020002;
+		public static Uri Quickwho;
+		public static Uri Quickwho2;
+        
     }
     public static final class id {
         public static final int buttonenter=0x7f07000d;

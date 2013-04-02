@@ -42,13 +42,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	long end = 0;
 	long duration = 0;
 	
-	boolean videoover = true;
+	boolean videostart = true;
+	int videoposition = 0;
+	int videoplay = 0;
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	
 	@SuppressWarnings("deprecation")
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final Button music = (Button) findViewById(R.id.buttonmusic); 
 		final Button play = (Button) findViewById(R.id.buttonplay); 
 		final Button pause = (Button) findViewById(R.id.buttonpause); 
+		
 
 		final CompoundButton ax = (CompoundButton) findViewById(R.id.radioy); 
 		ax.setChecked(true);
@@ -76,12 +80,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);  
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);  
-	
+
 		EditText min = (EditText)findViewById(R.id.editTextmin); 
 		EditText mili = (EditText)findViewById(R.id.editTextmili);
 		min.setText("0.3");
 		mili.setText("5000");
-	
+		
+		
 		enter.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				EditText min = (EditText)findViewById(R.id.editTextmin);
@@ -110,30 +115,71 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				startActivity(openmusic);
 			}
 		});
+		
+		final VideoView iv = (VideoView)findViewById(R.id.image);
+		iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
+	    //iv.setVisibility(View.VISIBLE); 
+
+		//iv.start();
+		//iv.pause();
+		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
+				//VideoView iv = (VideoView)findViewById(R.id.image);
+				//iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
+				//if(videostart == true){
+					//iv.start();
+					//videostart = false;
+				//}
+				
+
+				//iv.resume();
+				iv.start();
+
+				//iv.resume();
+			    iv.setVisibility(View.VISIBLE); 
+				videoplay = 1;
+				
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
-				
-				VideoView iv = (VideoView)findViewById(R.id.image);
-				iv.setVideoPath("/sdcard/Quickwho.mp4");
-			    iv.start();	
-			    iv.setVisibility(View.VISIBLE); 
 			}
 		});
-
 		pause.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
+				//VideoView iv = (VideoView)findViewById(R.id.image);
+				//iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
+				//if(iv.isPlaying()){
+					//videoposition = iv.getCurrentPosition();
+				//}
+				//iv.pause();
+				//videoposition = iv.getCurrentPosition();
+				iv.suspend();
+				iv.setVisibility(View.INVISIBLE); 
+				videoplay = 2;
+				
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
-				
-				VideoView iv = (VideoView)findViewById(R.id.image);
-				iv.setVideoPath("/sdcard/Quickwho.mp4");
-				iv.pause();
-				iv.setVisibility(View.INVISIBLE); 
 			}
 		});
+		//if(videostart == true){
+		//final VideoView iv = (VideoView)findViewById(R.id.image);
+		//iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
+			//videostart = false;
+		//}
+		//if(videoplay == 1){
+			//iv.seekTo(videoposition);
+		    //iv.start();
+		    //iv.setVisibility(View.VISIBLE); 
+		//}
+		//else if (videoplay == 2){
+			//videoposition = iv.getCurrentPosition();
+			//iv.pause();
+			//iv.setVisibility(View.INVISIBLE);
+		//}
 	}
+	
+	
+	
 	
 	public void onRadioButtonClicked(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
@@ -189,11 +235,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
 			VideoView iv = (VideoView)findViewById(R.id.image);
+			
 			float y = event.values[axisChooser]; 
-		
 			if (!mInitialized) {
 				mLastY = y;
-				iv.setVideoPath("/sdcard/Quickwho.mp4");
+				iv.setVideoPath("/sdcard/ShakeyVideos/Quickwho.mp4");
+
 				tvY.setText("0.0");
 				mInitialized = true;
 			} 
@@ -204,8 +251,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				mLastY = y;
 				tvY.setText(Float.toString(deltaY)); 
 				if (deltaY > 0) {
-					iv.setVisibility(View.VISIBLE); 
 					iv.start();
+					iv.setVisibility(View.VISIBLE); 
+					
 					musiccommand.putExtra("command", "play");
 					MainActivity.this.sendBroadcast(musiccommand);
 					start = System.nanoTime();
@@ -214,8 +262,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					end = System.nanoTime(); 
 					duration = end - start;		
 					if(duration/1000000 > militime){ 
-						iv.setVisibility(View.INVISIBLE);
 						iv.stopPlayback();
+						iv.setVisibility(View.INVISIBLE);
+
 						musiccommand.putExtra("command", "pause");
 						MainActivity.this.sendBroadcast(musiccommand);
 					}
