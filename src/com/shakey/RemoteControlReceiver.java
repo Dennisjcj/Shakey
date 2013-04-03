@@ -40,7 +40,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 					break;
 				default: msg = "Unknown Key";
 			}
-			Toast.makeText(context, "Received Intent.ACTION_MEDIA_BUTTON", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 		}
 		
 	}
