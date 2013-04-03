@@ -44,9 +44,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	long end = 0;
 	long duration = 0;
 	
-	boolean videostart = true;
-	int videoposition = 0;
-	int videoplay = 0;
+	//boolean videostart = true;
+	//int videoposition = 0;
+	//int videoplay = 0;
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	@SuppressWarnings("deprecation")
@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final Button play = (Button) findViewById(R.id.buttonplay); 
 		final Button pause = (Button) findViewById(R.id.buttonpause); 
 		
-		final CompoundButton ax = (CompoundButton) findViewById(R.id.radioy); 
+		final CompoundButton ax = (CompoundButton) findViewById(R.id.radiox); 
 		ax.setChecked(true);
 		
 		final CompoundButton aut = (CompoundButton) findViewById(R.id.radioauto); 
@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v) {
 				iv.start();
 			    iv.setVisibility(View.VISIBLE); 
-				videoplay = 1;
+				//videoplay = 1;
 				
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
@@ -136,7 +136,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v){
 				iv.suspend();
 				iv.setVisibility(View.INVISIBLE); 
-				videoplay = 2;
+				//videoplay = 2;
 				
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
