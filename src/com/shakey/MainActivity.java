@@ -17,9 +17,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.input.InputManager;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -40,7 +44,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private int autoChooser = 0;
 		
 	private double MINIMUM = 0.3; 
-	private int militime = 5000;   
+	private int militime = 500;   
 	
 	long start = 0;
 	long end = 0;
@@ -61,8 +65,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		super.onCreate(savedInstanceState);
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+          //  WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main); 
+		
+		
+		
+		
 		final Button enter = (Button) findViewById(R.id.buttonenter); 
 		final Button music = (Button) findViewById(R.id.buttonmusic); 
 		final Button play = (Button) findViewById(R.id.buttonplay); 
@@ -85,14 +94,22 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);  
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);  
 
-		EditText min = (EditText)findViewById(R.id.editTextmin); 
-		EditText mili = (EditText)findViewById(R.id.editTextmili);
+		final EditText min = (EditText)findViewById(R.id.editTextmin); 
+		final EditText mili = (EditText)findViewById(R.id.editTextmili);
 		min.setText("0.3");
-		mili.setText("5000");
+		mili.setText("500");
 		
-		
+		//InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		//imm.hideSoftInputFromWindow(mili.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+		//imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
+
 		enter.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
+				//InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				//imm.hideSoftInputFromWindow(mili.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+				//imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
+				//imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
+
 				EditText min = (EditText)findViewById(R.id.editTextmin);
 				EditText mili = (EditText)findViewById(R.id.editTextmili);
         	
