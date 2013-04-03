@@ -1,9 +1,7 @@
 //This is Shakey version Animated Video instead of picture; 
 //From now on, I am going to do all the development as forks from this Parent on GitHub.
 //So rather than rename the app everytime I change the code significantly, I will create a fork, and call it Shakey 1.8 and so on
-//Dennistest
-//testcommentistest
-//branch commit test
+
 package com.shakey;
 
 import android.net.Uri;
@@ -22,12 +20,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.VideoView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.media.AudioManager;
+
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener{
 
@@ -45,9 +45,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	long end = 0;
 	long duration = 0;
 	
-	//boolean videostart = true;
-	//int videoposition = 0;
-	//int videoplay = 0;
+	private boolean displaysettings = false;
+
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	@SuppressWarnings("deprecation")
@@ -66,7 +65,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final Button music = (Button) findViewById(R.id.buttonmusic); 
 		final Button play = (Button) findViewById(R.id.buttonplay); 
 		final Button pause = (Button) findViewById(R.id.buttonpause); 
-		
+		final Button menu = (Button) findViewById(R.id.buttonmenu); 
+		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
+		settings.setVisibility(View.INVISIBLE);
+
 		final CompoundButton ax = (CompoundButton) findViewById(R.id.radiox); 
 		ax.setChecked(true);
 		
@@ -90,7 +92,21 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
-
+		
+		
+		menu.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v) {
+				
+				if(displaysettings == false){
+					settings.setVisibility(View.VISIBLE);
+					displaysettings = true;
+				}
+				else{
+					settings.setVisibility(View.INVISIBLE);
+					displaysettings = false;
+				}
+			}
+		});
 		enter.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
@@ -128,8 +144,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v) {
 				iv.start();
 			    iv.setVisibility(View.VISIBLE); 
-				//videoplay = 1;
-				
+
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
 			}
@@ -138,7 +153,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v){
 				iv.suspend();
 				iv.setVisibility(View.INVISIBLE); 
-				//videoplay = 2;
 				
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
