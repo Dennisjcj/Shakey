@@ -17,6 +17,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -55,7 +56,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main); 
