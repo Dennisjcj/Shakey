@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private boolean mInitialized;
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
-	private int axisChooser = 1;
+	private int axisChooser = 0;
 	private int autoChooser = 0;
 		
 	private double MINIMUM = 0.3; 
