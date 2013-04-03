@@ -9,7 +9,6 @@ package com.shakey;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +16,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.hardware.input.InputManager;
-import android.text.InputType;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -59,25 +53,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
 	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
-		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-          //  WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setContentView(R.layout.activity_main); 
-		
-		
-		
-		
+
 		final Button enter = (Button) findViewById(R.id.buttonenter); 
 		final Button music = (Button) findViewById(R.id.buttonmusic); 
 		final Button play = (Button) findViewById(R.id.buttonplay); 
 		final Button pause = (Button) findViewById(R.id.buttonpause); 
 		
-
 		final CompoundButton ax = (CompoundButton) findViewById(R.id.radioy); 
 		ax.setChecked(true);
 		
@@ -93,26 +80,20 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);  
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);  
-
+		
 		final EditText min = (EditText)findViewById(R.id.editTextmin); 
 		final EditText mili = (EditText)findViewById(R.id.editTextmili);
 		min.setText("0.3");
 		mili.setText("500");
-		
-		//InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		//imm.hideSoftInputFromWindow(mili.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-		//imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
+		final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
 
 		enter.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				//InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-				//imm.hideSoftInputFromWindow(mili.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-				//imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
-				//imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
 
-				EditText min = (EditText)findViewById(R.id.editTextmin);
-				EditText mili = (EditText)findViewById(R.id.editTextmili);
-        	
 				String minstring = min.getText().toString();
 				double mindouble = Double.parseDouble(minstring);
 				if(mindouble > 0){
@@ -139,10 +120,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		final VideoView iv = (VideoView)findViewById(R.id.video);
 		String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
-
 		iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
 
-		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				iv.start();
@@ -206,7 +185,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
 	
-	
 	@Override
 	public void onProgressChanged(SeekBar v, int progress, boolean isUser) {
 		volume = (double)(progress)/100.0;
@@ -216,7 +194,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	}
 
 	@Override
-	public void onSensorChanged(SensorEvent event) {
+	public void onSensorChanged(SensorEvent event) {		
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
 			final VideoView iv = (VideoView)findViewById(R.id.video);
@@ -260,13 +238,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onStartTrackingTouch(SeekBar arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
-		
 	}
-
-
 }
