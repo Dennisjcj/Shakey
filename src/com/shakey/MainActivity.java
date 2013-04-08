@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -36,22 +39,39 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int axisChooser = 0;
-	private int autoChooser = 0;
+	private static int autoChooser = 0;
 		
 	private double MINIMUM = 0.3; 
 	private int militime = 500;   
+	
+	//bluetooth stuff
+	private BluetoothAdapter mBluetoothAdapter;	
+	private boolean hasBluetooth; 
+	private final int REQUEST_ENABLE_BT = 333; //Bluetooth enable request ID
+	private ComponentName mRemoteControlResponder;
+	private static int isPlaying = 0;
+	//end bluetooth stuff
 	
 	long start = 0;
 	long end = 0;
 	long duration = 0;
 	
 	private boolean displaysettings = false;
+	AudioManager am;
 
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	@SuppressWarnings("deprecation")
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
+	
+	//buttons
+	private final Button enter = null; 
+	private final Button music = null; 
+	private final static Button play = null; 
+	private final static Button pause = null; 
+	private final Button menu = null; 
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,11 +81,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 		setContentView(R.layout.activity_main); 
 
-		final Button enter = (Button) findViewById(R.id.buttonenter); 
-		final Button music = (Button) findViewById(R.id.buttonmusic); 
-		final Button play = (Button) findViewById(R.id.buttonplay); 
-		final Button pause = (Button) findViewById(R.id.buttonpause); 
-		final Button menu = (Button) findViewById(R.id.buttonmenu); 
+		Button enter = (Button) findViewById(R.id.buttonenter); 
+		Button music = (Button) findViewById(R.id.buttonmusic); 
+		Button play = (Button) findViewById(R.id.buttonplay); 
+		Button pause = (Button) findViewById(R.id.buttonpause); 
+		Button menu = (Button) findViewById(R.id.buttonmenu); 
 		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
 		settings.setVisibility(View.INVISIBLE);
 
@@ -93,6 +113,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
 		
+		//BluetoothSetup
+		setUpBlueTooth();
+		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
+		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		//endBluetoothstuff
 		
 		menu.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
@@ -147,6 +173,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
+				isPlaying = 1;
 			}
 		});
 		pause.setOnClickListener(new View.OnClickListener(){
@@ -156,6 +183,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
+				isPlaying = 0;
 			}
 		});
 		
@@ -192,10 +220,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	protected void onResume() {
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	protected void onPause() {
 		super.onPause();
 		mSensorManager.unregisterListener(this);
+	}
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -204,7 +238,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onProgressChanged(SeekBar v, int progress, boolean isUser) {
 		volume = (double)(progress)/100.0;
-		AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		
 		int maxv = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		am.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(volume*(double)(maxv)), 0);  
 	}
@@ -259,4 +293,35 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 	}
+	private void setUpBlueTooth()
+	{
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if(mBluetoothAdapter == null){
+			hasBluetooth = false;
+			//Device does not support Bluetooth
+			Toast.makeText(this, "This device does not support Bluetooth. Running teethless", Toast.LENGTH_SHORT).show();
+			//^ shows quick message
+		}
+		else{
+			hasBluetooth = true;
+		}
+		if(!mBluetoothAdapter.isEnabled()){//if the bluetooth is not enabled
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);//sets up an intent for bluetooth enabling request
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);//sends the intent to OS
+		}
+	}
+	public static int getAutoChooser()
+	{
+		return autoChooser;
+	}
+	public static int getisPlaying(){
+		return isPlaying;
+	}
+	public static void clickPause(){
+		pause.performClick();
+	}
+	public static void clickPlay(){
+		play.performClick();
+	}
+
 }

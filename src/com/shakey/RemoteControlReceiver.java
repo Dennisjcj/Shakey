@@ -1,12 +1,15 @@
 package com.shakey;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
+import android.widget.Button;
 import android.widget.Toast;
 
 
 public class RemoteControlReceiver extends BroadcastReceiver {
+
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -29,6 +32,18 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 				case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
 					break;
 				case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
+					if(MainActivity.getAutoChooser() == 0){
+						MainActivity.clickPause();
+					}
+					else
+					{
+						if(MainActivity.getisPlaying()==0){
+							MainActivity.clickPlay();
+						}
+						else{
+							MainActivity.clickPause();
+						}
+					}
 					break;
 				case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
 					break;
