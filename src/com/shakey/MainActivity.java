@@ -9,13 +9,16 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -50,6 +53,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private final int REQUEST_ENABLE_BT = 333; //Bluetooth enable request ID
 	private ComponentName mRemoteControlResponder;
 	private static int isPlaying = 0;
+	//private IntentFilter btFilter;
+	//private RemoteControlRoutedReceiver btReceiver; 
 	//end bluetooth stuff
 	
 	long start = 0;
@@ -68,8 +73,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	//buttons
 	private final Button enter = null; 
 	private final Button music = null; 
-	private final static Button play = null; 
-	private final static Button pause = null; 
+	private final Button play = null; 
+	private final Button pause = null; 
 	private final Button menu = null; 
 	
 	
@@ -118,6 +123,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
 		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		//btReceiver = new RemoteControlRoutedReceiver();
+		//btFilter = new IntentFilter();
+		//btFilter.addAction(Intent.ACTION_MEDIA_BUTTON);
+		//this.registerReceiver(btReceiver, btFilter);
 		//endBluetoothstuff
 		
 		menu.setOnClickListener(new View.OnClickListener(){
@@ -230,6 +239,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	protected void onDestroy(){
 		super.onDestroy();
 		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
+		//this.unregisterReceiver(btReceiver);
 	}
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -293,8 +303,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 	}
-	private void setUpBlueTooth()
-	{
+	private void setUpBlueTooth(){
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if(mBluetoothAdapter == null){
 			hasBluetooth = false;
@@ -310,18 +319,72 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);//sends the intent to OS
 		}
 	}
-	public static int getAutoChooser()
-	{
+	public static int getAutoChooser(){
 		return autoChooser;
 	}
 	public static int getisPlaying(){
 		return isPlaying;
 	}
-	public static void clickPause(){
+	public void clickPause(){
 		pause.performClick();
 	}
-	public static void clickPlay(){
+	public void clickPlay(){
 		play.performClick();
 	}
+	
+	
+	/*public class RemoteControlRoutedReceiver extends BroadcastReceiver {
 
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())){
+				KeyEvent Xevent = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+				int keyType = Xevent.getKeyCode();
+				String msg ="";
+				switch(keyType)
+				{
+					case KeyEvent.KEYCODE_MEDIA_CLOSE:	msg = "CLOSE";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_EJECT:	msg = "EJECT";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:	msg = "FAST FORWARD";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_NEXT:	msg = "NEXT";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PAUSE:	msg = "PAUSE";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
+						Toast.makeText(context, "Got to Play/Pause", Toast.LENGTH_SHORT).show();
+						if(autoChooser == 0){
+							clickPause();
+						}
+						else{
+							if(isPlaying == 0){
+								clickPlay();
+							}
+							else{
+								clickPause();
+							}
+						}
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_RECORD:	msg = "RECORD";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_REWIND:	msg = "REWIND";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_STOP:	msg = "STOP";
+						break;
+					default: msg = "Unknown Key";
+				}
+				
+				
+			}			
+		}
+		
+	}*/
 }
+
+
