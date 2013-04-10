@@ -34,7 +34,6 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 				case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
 					break;
 				case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
-					Toast.makeText(context, "Got to Play/Pause", Toast.LENGTH_SHORT).show();
 					break;
 				case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
 					break;
@@ -46,10 +45,9 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 					break;
 				default: msg = "Unknown Key";
 			}
-			Intent i = intent;
-		    i.setClass(context, MainActivity.class);
-		    //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		    context.sendBroadcast(i);
+			Intent i = new Intent();
+		    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			context.sendBroadcast(i);
 			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 		}
 		
