@@ -21,6 +21,9 @@
     <string name="Pause">Pause</string>
     <string name="Kill">Kill</string>
     <string name="Menu">Menu</string>
+    <string name="Banana">Banana</string>
+    <string name="Fireworks">Fireworks</string>
+    <string name="Bubbles">Bubbles</string>
     
 
 </resources>

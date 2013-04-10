@@ -6,7 +6,6 @@ package com.shakey;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +38,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int axisChooser = 0;
+	private int vidChooser = 0;
 	private int autoChooser = 1;
 		
 	private double MINIMUM = 0.3; 
@@ -49,7 +49,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	long duration = 0;
 	
 	private boolean displaysettings = false;
-
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	@SuppressWarnings("deprecation")
@@ -77,6 +76,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		final CompoundButton man = (CompoundButton) findViewById(R.id.radiomanual); 
 		man.setChecked(true);
+		
+		final CompoundButton ban = (CompoundButton) findViewById(R.id.radiobanana); 
+		ban.setChecked(true);
+		
 		
 		SeekBar sb = (SeekBar)findViewById(R.id.seekBar1);
 		sb.setMax(100);
@@ -140,12 +143,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		});
 		
 		final VideoView iv = (VideoView)findViewById(R.id.video);
-		String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
+		final String uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 		iv.setVideoURI(Uri.parse(uri));	   
-		iv.start();
 		
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
+				iv.setVideoURI(Uri.parse(uri));	   
 				iv.start();
 			}
 		});
@@ -185,6 +188,32 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	            break;
 	        case R.id.radioz:
 	            if (checked) axisChooser = 2;
+	            break;
+	    }
+	}
+	
+
+	public void onVidChoose(View view) {
+	    boolean checked = ((RadioButton) view).isChecked();
+	
+	    switch(view.getId()) {
+	        case R.id.radiobanana:
+	            if (checked) {
+	            	vidChooser = 0;
+	        		//uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+	            }
+	            break;
+	        case R.id.radiofireworks:
+	            if (checked){
+	            	vidChooser = 1;
+	        		//uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+	            }
+	            break;
+	        case R.id.radiobubbles:
+	            if (checked){
+	            	vidChooser = 2;
+	        		//uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+	            }
 	            break;
 	    }
 	}
@@ -229,7 +258,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			float y = event.values[axisChooser]; 
 			if (!mInitialized) {
 				mLastY = y;
-				String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
+				String uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 				iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
 				iv.start();
 				tvY.setText("0.0");

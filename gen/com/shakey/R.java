@@ -22,8 +22,11 @@ public final class R {
         public static final int buttonplay=0x7f080006;
         public static final int editTextmili=0x7f08000f;
         public static final int editTextmin=0x7f08000d;
-        public static final int menu_settings=0x7f080013;
+        public static final int menu_settings=0x7f080016;
         public static final int radioauto=0x7f080005;
+        public static final int radiobanana=0x7f080011;
+        public static final int radiobubbles=0x7f080013;
+        public static final int radiofireworks=0x7f080012;
         public static final int radiomanual=0x7f080004;
         public static final int radiox=0x7f080009;
         public static final int radioy=0x7f08000a;
@@ -33,8 +36,8 @@ public final class R {
         public static final int textView1=0x7f08000c;
         public static final int textView2=0x7f08000e;
         public static final int textView5=0x7f080001;
-        public static final int video=0x7f080012;
-        public static final int y_axis=0x7f080011;
+        public static final int video=0x7f080015;
+        public static final int y_axis=0x7f080014;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -43,10 +46,15 @@ public final class R {
         public static final int activity_main=0x7f070000;
     }
     public static final class raw {
-        public static final int quickwho=0x7f040000;
+        public static final int banana=0x7f040000;
+        public static final int bubbles=0x7f040001;
+        public static final int fireworks=0x7f040002;
     }
     public static final class string {
         public static final int Auto=0x7f05000f;
+        public static final int Banana=0x7f050014;
+        public static final int Bubbles=0x7f050016;
+        public static final int Fireworks=0x7f050015;
         public static final int Instructions=0x7f050003;
         public static final int Kill=0x7f050012;
         public static final int Manual=0x7f05000e;
