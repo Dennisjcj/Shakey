@@ -3,6 +3,7 @@
     package="com.shakey"
     android:versionCode="1"
     android:versionName="1.9" >
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <uses-sdk
         android:minSdkVersion="11"
