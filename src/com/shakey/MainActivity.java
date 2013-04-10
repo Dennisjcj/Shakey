@@ -6,6 +6,7 @@ package com.shakey;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +28,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener{
@@ -36,7 +39,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int axisChooser = 0;
-	private int autoChooser = 0;
+	private int autoChooser = 1;
 		
 	private double MINIMUM = 0.3; 
 	private int militime = 500;   
@@ -72,8 +75,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final CompoundButton ax = (CompoundButton) findViewById(R.id.radiox); 
 		ax.setChecked(true);
 		
-		final CompoundButton aut = (CompoundButton) findViewById(R.id.radioauto); 
-		aut.setChecked(true);
+		final CompoundButton man = (CompoundButton) findViewById(R.id.radiomanual); 
+		man.setChecked(true);
 		
 		SeekBar sb = (SeekBar)findViewById(R.id.seekBar1);
 		sb.setMax(100);
@@ -138,28 +141,37 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		final VideoView iv = (VideoView)findViewById(R.id.video);
 		String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
-		iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
-
+		iv.setVideoURI(Uri.parse(uri));	   
+		iv.start();
+		
+		iv.setOnCompletionListener(new OnCompletionListener(){
+			public void onCompletion(MediaPlayer arg0) {
+				iv.start();
+			}
+		});
+		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
+				
 				iv.start();
 			    iv.setVisibility(View.VISIBLE); 
-
+			    
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
 			}
 		});
+		
 		pause.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				iv.suspend();
-				iv.setVisibility(View.INVISIBLE); 
-				
+				iv.pause();
+			    iv.setVisibility(View.INVISIBLE); 
+
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
 			}
-		});
-		
+		});	
 	}
+	
 	
 	public void onRadioButtonClicked(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
@@ -210,16 +222,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	}
 
 	@Override
-	public void onSensorChanged(SensorEvent event) {		
+	public void onSensorChanged(SensorEvent event) {	
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
 			final VideoView iv = (VideoView)findViewById(R.id.video);
-			
 			float y = event.values[axisChooser]; 
 			if (!mInitialized) {
 				mLastY = y;
 				String uri = "android.resource://" + getPackageName() + "/" + R.raw.quickwho;
 				iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
+				iv.start();
 				tvY.setText("0.0");
 				mInitialized = true;
 			} 
@@ -241,7 +253,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					end = System.nanoTime(); 
 					duration = end - start;		
 					if(duration/1000000 > militime){ 
-						iv.stopPlayback();
+						iv.pause();
 						iv.setVisibility(View.INVISIBLE);
 
 						musiccommand.putExtra("command", "pause");
