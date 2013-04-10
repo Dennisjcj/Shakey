@@ -53,8 +53,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private final int REQUEST_ENABLE_BT = 333; //Bluetooth enable request ID
 	private ComponentName mRemoteControlResponder;
 	private static int isPlaying = 0;
-	//private IntentFilter btFilter;
-	//private RemoteControlRoutedReceiver btReceiver; 
+	private IntentFilter btFilter;
+	private RemoteControlRoutedReceiver btReceiver; 
 	//end bluetooth stuff
 	
 	long start = 0;
@@ -71,11 +71,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	double volume = 0.5;
 	
 	//buttons
-	private final Button enter = null; 
-	private final Button music = null; 
-	private final Button play = null; 
-	private final Button pause = null; 
-	private final Button menu = null; 
+	private Button enter; 
+	private Button music; 
+	private Button play; 
+	private Button pause; 
+	private Button menu; 
 	
 	
 	@Override
@@ -123,10 +123,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
 		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
-		//btReceiver = new RemoteControlRoutedReceiver();
-		//btFilter = new IntentFilter();
-		//btFilter.addAction(Intent.ACTION_MEDIA_BUTTON);
-		//this.registerReceiver(btReceiver, btFilter);
+		btReceiver = new RemoteControlRoutedReceiver();
+		btFilter = new IntentFilter();
+		btFilter.addAction(Intent.ACTION_MEDIA_BUTTON);
+		this.registerReceiver(btReceiver, btFilter);
 		//endBluetoothstuff
 		
 		menu.setOnClickListener(new View.OnClickListener(){
@@ -333,7 +333,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	}
 	
 	
-	/*public class RemoteControlRoutedReceiver extends BroadcastReceiver {
+	public class RemoteControlRoutedReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -384,7 +384,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			}			
 		}
 		
-	}*/
+	}
 }
 
 
