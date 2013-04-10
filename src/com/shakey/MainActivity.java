@@ -66,11 +66,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	double volume = 0.5;
 	
 	//buttons
-	private final Button enter = null; 
-	private final Button music = null; 
-	private final static Button play = null; 
-	private final static Button pause = null; 
-	private final Button menu = null; 
+	private Button enter = null; 
+	private Button music = null; 
+	private static Button play = null; 
+	private static Button pause = null; 
+	private Button menu = null; 
 	
 	
 	@Override
