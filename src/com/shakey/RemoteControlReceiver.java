@@ -18,7 +18,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 			KeyEvent Xevent = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 			int keyType = Xevent.getKeyCode();
 			String msg ="";
-			
+			/*
 			switch(keyType)
 			{
 				case KeyEvent.KEYCODE_MEDIA_CLOSE:	msg = "CLOSE";
@@ -44,9 +44,10 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 				case KeyEvent.KEYCODE_MEDIA_STOP:	msg = "STOP";
 					break;
 				default: msg = "Unknown Key";
-			}
+			}*/
 			Intent i = new Intent();
-		    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		    //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			i.setClass(context, MainActivity.RemoteControlRoutedReceiver.class);
 			context.sendBroadcast(i);
 			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 		}
