@@ -55,6 +55,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private int isPlaying = 0;
 	private IntentFilter btFilter;
 	private RemoteControlRoutedReceiver btReceiver; 
+	
+	static int mult = 0;
 	//end bluetooth stuff
 	
 	long start = 0;
@@ -86,11 +88,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 		setContentView(R.layout.activity_main); 
 
-		Button enter = (Button) findViewById(R.id.buttonenter); 
-		Button music = (Button) findViewById(R.id.buttonmusic); 
-		Button play = (Button) findViewById(R.id.buttonplay); 
-		Button pause = (Button) findViewById(R.id.buttonpause); 
-		Button menu = (Button) findViewById(R.id.buttonmenu); 
+		enter = (Button) findViewById(R.id.buttonenter); 
+		music = (Button) findViewById(R.id.buttonmusic); 
+		play = (Button) findViewById(R.id.buttonplay); 
+		pause = (Button) findViewById(R.id.buttonpause); 
+		menu = (Button) findViewById(R.id.buttonmenu); 
 		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
 		settings.setVisibility(View.INVISIBLE);
 
@@ -122,7 +124,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		setUpBlueTooth();
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
 		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 		btReceiver = new RemoteControlRoutedReceiver();
 		btFilter = new IntentFilter();
 		btFilter.addAction("com.MainActivity.Shakey.MEDIA_BUTTON");
@@ -343,6 +345,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				Bundle extras = intent.getExtras();
 				int keyType = extras.getInt("keyType");
 				String msg ="";
+				
 				switch(keyType)
 				{
 					case KeyEvent.KEYCODE_MEDIA_CLOSE:	msg = "CLOSE";
@@ -358,6 +361,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
+						
 						if(autoChooser == 0){
 							clickPause();
 						}
@@ -381,7 +385,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 						break;
 					default: msg = "Unknown Key";
 				}
-			}		
+			}
+			abortBroadcast();
 		}
 		
 	}
