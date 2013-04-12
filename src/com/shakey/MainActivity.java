@@ -125,8 +125,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 		btReceiver = new RemoteControlRoutedReceiver();
 		btFilter = new IntentFilter();
-		btFilter.addAction(Intent.ACTION_MEDIA_BUTTON);
-		this.registerReceiver(btReceiver, btFilter);
+		btFilter.addAction("com.MainActivity.Shakey.MEDIA_BUTTON");
 		//endBluetoothstuff
 		
 		menu.setOnClickListener(new View.OnClickListener(){
@@ -229,17 +228,25 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	protected void onResume() {
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		//bluetooth
 		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		this.registerReceiver(btReceiver, btFilter);
+		//bluetooth
 	}
 	protected void onPause() {
 		super.onPause();
 		mSensorManager.unregisterListener(this);
+		//bluetooth
+		this.unregisterReceiver(btReceiver);
+		//bluetooth
 	}
 	@Override
 	protected void onDestroy(){
-		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
-		this.unregisterReceiver(btReceiver);
 		super.onDestroy();
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
+		//bluetooth
+		this.unregisterReceiver(btReceiver);
+		//bluetooth		
 	}
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -332,10 +339,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Toast.makeText(context,"Got to BroadCast", Toast.LENGTH_SHORT).show();
-			if(Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())){
-				KeyEvent Xevent = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-				int keyType = Xevent.getKeyCode();
+			if("com.MainActivity.Shakey.MEDIA_BUTTON".equals(intent.getAction())){
+				Bundle extras = intent.getExtras();
+				int keyType = extras.getInt("keyType");
 				String msg ="";
 				switch(keyType)
 				{
@@ -352,7 +358,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
-						Toast.makeText(context, "Got to Play/Pause", Toast.LENGTH_SHORT).show();
 						if(autoChooser == 0){
 							clickPause();
 						}
@@ -364,6 +369,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 								clickPause();
 							}
 						}
+						
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
 						break;
@@ -375,9 +381,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 						break;
 					default: msg = "Unknown Key";
 				}
-				
-				
-			}			
+			}		
 		}
 		
 	}

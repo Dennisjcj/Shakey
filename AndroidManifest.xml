@@ -24,6 +24,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 				<action android:name="android.intent.action.MEDIA_BUTTON"/>
+				<action android:name="com.MainActivity.Shakey.MEDIA_BUTTON"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
