@@ -44,11 +44,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int axisChooser = 0;
-
 	private int vidChooser = 0;
 	private int autoChooser = 1;
-
-		
 	private double MINIMUM = 0.3; 
 	private int militime = 500;   
 	
@@ -60,8 +57,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private int isPlaying = 0;
 	private IntentFilter btFilter;
 	private RemoteControlRoutedReceiver btReceiver; 
-	
-	static int mult = 0;
 	//end bluetooth stuff
 	
 	long start = 0;
@@ -157,7 +152,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v) {
 				imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 				imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
-
 				String minstring = min.getText().toString();
 				double mindouble = Double.parseDouble(minstring);
 				if(mindouble > 0){
@@ -185,7 +179,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final VideoView iv = (VideoView)findViewById(R.id.video);
 		final String uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 		iv.setVideoURI(Uri.parse(uri));	   
-		
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
 				iv.setVideoURI(Uri.parse(uri));	   
@@ -195,10 +188,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				
 				iv.start();
 			    iv.setVisibility(View.VISIBLE); 
-			    
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
 				isPlaying = 1;
@@ -209,7 +200,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v){
 				iv.pause();
 			    iv.setVisibility(View.INVISIBLE); 
-
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
 				isPlaying = 0;
@@ -220,7 +210,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	public void onRadioButtonClicked(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
-	    
 	    switch(view.getId()) {
 	        case R.id.radiox:
 	            if (checked) axisChooser = 0;
@@ -277,14 +266,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		//bluetooth
 		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
-		this.registerReceiver(btReceiver, btFilter);
+		registerReceiver(btReceiver, btFilter);
 		//bluetooth
 	}
 	protected void onPause() {
 		super.onPause();
 		mSensorManager.unregisterListener(this);
 		//bluetooth
-		this.unregisterReceiver(btReceiver);
+		unregisterReceiver(btReceiver);
 		//bluetooth
 	}
 	@Override
@@ -292,7 +281,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		super.onDestroy();
 		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 		//bluetooth
-		this.unregisterReceiver(btReceiver);
+		unregisterReceiver(btReceiver);
 		//bluetooth		
 	}
 	@Override

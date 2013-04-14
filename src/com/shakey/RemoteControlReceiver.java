@@ -13,8 +13,9 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 		
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if(Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())){
-			KeyEvent Xevent = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+		KeyEvent Xevent = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+		if(Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) && KeyEvent.ACTION_UP==(Xevent.getAction())){
+			
 			int keyType = Xevent.getKeyCode();
 			
 					
@@ -23,8 +24,6 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 		    i.setAction("com.MainActivity.Shakey.MEDIA_BUTTON");
 		    i.putExtra("keyType", keyType);
 			context.sendBroadcast(i);
-			Toast.makeText(context, String.valueOf(MainActivity.mult), Toast.LENGTH_SHORT).show();
-			MainActivity.mult++;
 			abortBroadcast();
 		
 		}
