@@ -8,12 +8,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +26,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -41,21 +48,47 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private int vidChooser = 1;
 	private boolean vidchanged = false;
 	private int autoChooser = 1;
-	
-		
+
 	private double MINIMUM = 0.3; 
 	private int militime = 4000;   
+	
+	//bluetooth stuff
+	private BluetoothAdapter mBluetoothAdapter;	
+	private boolean hasBluetooth; 
+	private final int REQUEST_ENABLE_BT = 333; //Bluetooth enable request ID
+	private ComponentName mRemoteControlResponder;
+	private int isPlaying = 0;
+	private IntentFilter btFilter;
+	private RemoteControlRoutedReceiver btReceiver; 
+	//end bluetooth stuff
+	
+	private CompoundButton man;
+	private CompoundButton ax;
+	private CompoundButton ban;
+	private CompoundButton auto;
+	private RadioGroup manAuto;
 	
 	long start = 0;
 	long end = 0;
 	long duration = 0;
 	
 	private boolean displaysettings = false;
+
+	AudioManager am;
+
 	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	@SuppressWarnings("deprecation")
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
+	
+	//buttons
+	private Button enter; 
+	private Button music; 
+	private Button play; 
+	private Button pause; 
+	private Button menu; 
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,22 +98,28 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 		setContentView(R.layout.activity_main); 
 
-		final Button enter = (Button) findViewById(R.id.buttonenter); 
-		final Button music = (Button) findViewById(R.id.buttonmusic); 
-		final Button play = (Button) findViewById(R.id.buttonplay); 
-		final Button pause = (Button) findViewById(R.id.buttonpause); 
-		final Button menu = (Button) findViewById(R.id.buttonmenu); 
+		enter = (Button) findViewById(R.id.buttonenter); 
+		music = (Button) findViewById(R.id.buttonmusic); 
+		play = (Button) findViewById(R.id.buttonplay); 
+		pause = (Button) findViewById(R.id.buttonpause); 
+		menu = (Button) findViewById(R.id.buttonmenu); 
 		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
 		settings.setVisibility(View.INVISIBLE);
 
-		final CompoundButton ax = (CompoundButton) findViewById(R.id.radiox); 
+		ax = (CompoundButton) findViewById(R.id.radiox); 
 		ax.setChecked(true);
 		
-		final CompoundButton man = (CompoundButton) findViewById(R.id.radiomanual); 
+		man = (CompoundButton) findViewById(R.id.radiomanual); 
 		man.setChecked(true);
 		
+
 		final CompoundButton fir = (CompoundButton) findViewById(R.id.radiofireworks); 
 		fir.setChecked(true);
+
+		
+		auto = (CompoundButton) findViewById(R.id.radioauto);
+		
+		manAuto = (RadioGroup) findViewById(R.id.manAuto);
 		
 		
 		SeekBar sb = (SeekBar)findViewById(R.id.seekBar1);
@@ -101,6 +140,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
 		
+		//BluetoothSetup
+		setUpBlueTooth();
+		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
+		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		btReceiver = new RemoteControlRoutedReceiver();
+		btFilter = new IntentFilter();
+		btFilter.addAction("com.MainActivity.Shakey.MEDIA_BUTTON");
+		//endBluetoothstuff
 		
 		menu.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
@@ -119,7 +167,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			public void onClick(View v) {
 				imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 				imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
-
 				String minstring = min.getText().toString();
 				double mindouble = Double.parseDouble(minstring);
 				if(mindouble > 0){
@@ -145,7 +192,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		});
 		
 		final VideoView iv = (VideoView)findViewById(R.id.video);
-		
+
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
 				if(vidChooser == 0){
@@ -171,29 +218,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				VideoView iv = (VideoView)findViewById(R.id.video);
-				if(vidChooser == 0){
-					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
-					iv.setVideoURI(Uri.parse(banana_uri));	   
-				}
-				else if(vidChooser == 1){
-					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
-					iv.setVideoURI(Uri.parse(fireworks_uri));					
-				}
-				else if(vidChooser == 2){
-					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
-					iv.setVideoURI(Uri.parse(bubbles_uri));					
-				}
-				else{
-					iv.setVisibility(View.INVISIBLE);
-				}
-				if(vidChooser != 3){
-					iv.start();
-					iv.setVisibility(View.VISIBLE); 	
-				}
-			    
+
+				iv.start();
+			    iv.setVisibility(View.VISIBLE); 
+
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
+				isPlaying = 1;
+				am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 			}
 		});
 		
@@ -202,9 +234,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				VideoView iv = (VideoView)findViewById(R.id.video);
 				iv.pause();
 			    iv.setVisibility(View.INVISIBLE); 
-
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
+				isPlaying = 0;
+				am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 			}
 		});	
 	}
@@ -212,7 +245,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	public void onRadioButtonClicked(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
-	    
 	    switch(view.getId()) {
 	        case R.id.radiox:
 	            if (checked) axisChooser = 0;
@@ -261,11 +293,28 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	protected void onResume() {
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		//bluetooth
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		registerReceiver(btReceiver, btFilter);
+		//bluetooth
 	}
 	protected void onPause() {
 		super.onPause();
 		mSensorManager.unregisterListener(this);
+		//bluetooth
+		unregisterReceiver(btReceiver);
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
+		//bluetooth
 	}
+	/*
+	@Override
+	protected void onDestroy(){
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
+		//bluetooth
+		unregisterReceiver(btReceiver);
+		//bluetooth		
+	}
+	*/
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
@@ -273,7 +322,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	@Override
 	public void onProgressChanged(SeekBar v, int progress, boolean isUser) {
 		volume = (double)(progress)/100.0;
-		AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		
 		int maxv = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		am.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(volume*(double)(maxv)), 0);  
 	}
@@ -349,6 +398,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 			}
 		}
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	@Override
 	public void onStartTrackingTouch(SeekBar arg0) {
@@ -358,4 +408,103 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 	}
+	private void setUpBlueTooth(){
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if(mBluetoothAdapter == null){
+			hasBluetooth = false;
+			//Device does not support Bluetooth
+			Toast.makeText(this, "This device does not support Bluetooth. Running teethless", Toast.LENGTH_SHORT).show();
+			//^ shows quick message
+		}
+		else{
+			hasBluetooth = true;
+		}
+		if(!mBluetoothAdapter.isEnabled()){//if the bluetooth is not enabled
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);//sets up an intent for bluetooth enabling request
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);//sends the intent to OS
+		}
+	}
+	
+	public void clickPause(){
+		pause.performClick();
+		Toast.makeText(this, "Pause Function", Toast.LENGTH_SHORT);
+
+	}
+	public void clickPlay(){
+		play.performClick();
+		Toast.makeText(this, "Pause Function", Toast.LENGTH_SHORT);
+
+	}
+	public void setManual(){
+		if(autoChooser==0){
+			manAuto.check(man.getId());
+			man.performClick();
+		}
+		
+	}
+	public void setAuto(){
+		if(autoChooser == 1){
+			manAuto.check(auto.getId());
+			auto.performClick();
+		}
+
+	}
+	
+	
+	public class RemoteControlRoutedReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if("com.MainActivity.Shakey.MEDIA_BUTTON".equals(intent.getAction())){
+				Bundle extras = intent.getExtras();
+				int keyType = extras.getInt("keyType");
+				String msg ="";
+				
+				switch(keyType)
+				{
+					case KeyEvent.KEYCODE_MEDIA_CLOSE:	msg = "CLOSE";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_EJECT:	msg = "EJECT";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:	msg = "FAST FORWARD";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_NEXT:	msg = "NEXT";
+						setAuto();
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PAUSE:	msg = "PAUSE";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
+						if(autoChooser == 0){
+							clickPause();
+						}
+						else{
+							if(isPlaying == 0){
+								clickPlay();
+							}
+							else{
+								clickPause();
+							}
+						}
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
+						setManual();
+						break;
+					case KeyEvent.KEYCODE_MEDIA_RECORD:	msg = "RECORD";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_REWIND:	msg = "REWIND";
+						break;
+					case KeyEvent.KEYCODE_MEDIA_STOP:	msg = "STOP";
+						break;
+					default: msg = "Unknown Key";
+				}
+			}
+			am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+			abortBroadcast();
+		}
+		
+	}
 }
+
+
