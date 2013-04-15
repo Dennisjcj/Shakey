@@ -204,6 +204,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
 				isPlaying = 1;
+				am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 			}
 		});
 		
@@ -214,6 +215,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				musiccommand.putExtra("command", "pause");
 				MainActivity.this.sendBroadcast(musiccommand);
 				isPlaying = 0;
+				am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 			}
 		});	
 	}
@@ -350,6 +352,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 			}
 		}
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	@Override
 	public void onStartTrackingTouch(SeekBar arg0) {
@@ -378,9 +381,27 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	public void clickPause(){
 		pause.performClick();
+		Toast.makeText(this, "Pause Function", Toast.LENGTH_SHORT);
+
 	}
 	public void clickPlay(){
 		play.performClick();
+		Toast.makeText(this, "Pause Function", Toast.LENGTH_SHORT);
+
+	}
+	public void setManual(){
+		if(autoChooser==0){
+			manAuto.check(man.getId());
+			man.performClick();
+		}
+		
+	}
+	public void setAuto(){
+		if(autoChooser == 1){
+			manAuto.check(auto.getId());
+			auto.performClick();
+		}
+
 	}
 	
 	
@@ -402,17 +423,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:	msg = "FAST FORWARD";
 						break;
 					case KeyEvent.KEYCODE_MEDIA_NEXT:	msg = "NEXT";
-						if(autoChooser == 1){
-							manAuto.check(auto.getId());
-							auto.performClick();
-						}
+						setAuto();
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PAUSE:	msg = "PAUSE";
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PLAY:	msg = "PLAY";
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:	msg = "PLAY/PAUSE";
-						
 						if(autoChooser == 0){
 							clickPause();
 						}
@@ -426,10 +443,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 						}
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
-						if(autoChooser==0){
-							manAuto.check(man.getId());
-							man.performClick();
-						}
+						setManual();
 						break;
 					case KeyEvent.KEYCODE_MEDIA_RECORD:	msg = "RECORD";
 						break;
@@ -440,6 +454,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					default: msg = "Unknown Key";
 				}
 			}
+			am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 			abortBroadcast();
 		}
 		

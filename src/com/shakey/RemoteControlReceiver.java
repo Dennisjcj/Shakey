@@ -20,9 +20,10 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 		    i.setAction("com.MainActivity.Shakey.MEDIA_BUTTON");
 		    i.putExtra("keyType", keyType);
 			context.sendBroadcast(i);
-			abortBroadcast();
+			
 		
 		}
+		abortBroadcast();
 		
 	}
 }
