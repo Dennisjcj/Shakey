@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.RadioButton;
@@ -58,6 +59,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private IntentFilter btFilter;
 	private RemoteControlRoutedReceiver btReceiver; 
 	//end bluetooth stuff
+	
+	private CompoundButton man;
+	private CompoundButton ax;
+	private CompoundButton ban;
+	private CompoundButton auto;
+	private RadioGroup manAuto;
 	
 	long start = 0;
 	long end = 0;
@@ -97,14 +104,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
 		settings.setVisibility(View.INVISIBLE);
 
-		final CompoundButton ax = (CompoundButton) findViewById(R.id.radiox); 
+		ax = (CompoundButton) findViewById(R.id.radiox); 
 		ax.setChecked(true);
 		
-		final CompoundButton man = (CompoundButton) findViewById(R.id.radiomanual); 
+		man = (CompoundButton) findViewById(R.id.radiomanual); 
 		man.setChecked(true);
 		
-		final CompoundButton ban = (CompoundButton) findViewById(R.id.radiobanana); 
+		ban = (CompoundButton) findViewById(R.id.radiobanana); 
 		ban.setChecked(true);
+		
+		auto = (CompoundButton) findViewById(R.id.radioauto);
+		
+		manAuto = (RadioGroup) findViewById(R.id.manAuto);
 		
 		
 		SeekBar sb = (SeekBar)findViewById(R.id.seekBar1);
@@ -274,16 +285,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mSensorManager.unregisterListener(this);
 		//bluetooth
 		unregisterReceiver(btReceiver);
+		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 		//bluetooth
 	}
+	/*
 	@Override
 	protected void onDestroy(){
-		super.onDestroy();
 		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 		//bluetooth
 		unregisterReceiver(btReceiver);
 		//bluetooth		
 	}
+	*/
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
@@ -389,6 +402,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:	msg = "FAST FORWARD";
 						break;
 					case KeyEvent.KEYCODE_MEDIA_NEXT:	msg = "NEXT";
+						if(autoChooser == 1){
+							manAuto.check(auto.getId());
+							auto.performClick();
+						}
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PAUSE:	msg = "PAUSE";
 						break;
@@ -407,9 +424,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 								clickPause();
 							}
 						}
-						
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PREVIOUS:	msg = "PREVIOUS";
+						if(autoChooser==0){
+							manAuto.check(man.getId());
+							man.performClick();
+						}
 						break;
 					case KeyEvent.KEYCODE_MEDIA_RECORD:	msg = "RECORD";
 						break;
