@@ -38,8 +38,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int axisChooser = 0;
-	private int vidChooser = 0;
+	private int vidChooser = 1;
+	private boolean vidchanged = false;
 	private int autoChooser = 1;
+	
 		
 	private double MINIMUM = 0.3; 
 	private int militime = 500;   
@@ -77,8 +79,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final CompoundButton man = (CompoundButton) findViewById(R.id.radiomanual); 
 		man.setChecked(true);
 		
-		final CompoundButton ban = (CompoundButton) findViewById(R.id.radiobanana); 
-		ban.setChecked(true);
+		final CompoundButton fir = (CompoundButton) findViewById(R.id.radiofireworks); 
+		fir.setChecked(true);
 		
 		
 		SeekBar sb = (SeekBar)findViewById(R.id.seekBar1);
@@ -143,21 +145,42 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		});
 		
 		final VideoView iv = (VideoView)findViewById(R.id.video);
-		final String uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
-		iv.setVideoURI(Uri.parse(uri));	   
 		
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
-				iv.setVideoURI(Uri.parse(uri));	   
+				if(vidChooser == 0){
+					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					iv.setVideoURI(Uri.parse(banana_uri));	   
+				}
+				else if(vidChooser == 1){
+					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					iv.setVideoURI(Uri.parse(fireworks_uri));					
+				}
+				else{
+					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					iv.setVideoURI(Uri.parse(bubbles_uri));					
+				}
 				iv.start();
 			}
 		});
 		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				
+				VideoView iv = (VideoView)findViewById(R.id.video);
+				if(vidChooser == 0){
+					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					iv.setVideoURI(Uri.parse(banana_uri));	   
+				}
+				else if(vidChooser == 1){
+					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					iv.setVideoURI(Uri.parse(fireworks_uri));					
+				}
+				else{
+					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					iv.setVideoURI(Uri.parse(bubbles_uri));					
+				}
 				iv.start();
-			    iv.setVisibility(View.VISIBLE); 
+				iv.setVisibility(View.VISIBLE); 
 			    
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
@@ -166,6 +189,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		pause.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
+				VideoView iv = (VideoView)findViewById(R.id.video);
 				iv.pause();
 			    iv.setVisibility(View.INVISIBLE); 
 
@@ -192,33 +216,24 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	    }
 	}
 	
-
 	public void onVidChoose(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
-	
+	    vidchanged = true;
 	    switch(view.getId()) {
 	        case R.id.radiobanana:
-	            if (checked) {
-	            	vidChooser = 0;
-	        		//uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
-	            }
+	            if (checked) vidChooser = 0;
 	            break;
 	        case R.id.radiofireworks:
-	            if (checked){
-	            	vidChooser = 1;
-	        		//uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
-	            }
+	            if (checked) vidChooser = 1;
 	            break;
 	        case R.id.radiobubbles:
-	            if (checked){
-	            	vidChooser = 2;
-	        		//uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
-	            }
+	            if (checked) vidChooser = 2;
 	            break;
 	    }
 	}
 	
 	public void onAutochoose(View view) {
+		mInitialized = false;
 	    boolean checked = ((RadioButton) view).isChecked();
 	    switch(view.getId()) {
 	        case R.id.radioauto:
@@ -254,12 +269,37 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onSensorChanged(SensorEvent event) {	
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
-			final VideoView iv = (VideoView)findViewById(R.id.video);
+			VideoView iv = (VideoView)findViewById(R.id.video);
+			if(vidchanged == true){
+				vidchanged = false;
+				if(vidChooser == 0){
+					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					iv.setVideoURI(Uri.parse(banana_uri));	   
+				}
+				else if(vidChooser == 1){
+					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					iv.setVideoURI(Uri.parse(fireworks_uri));					
+				}
+				else{
+					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					iv.setVideoURI(Uri.parse(bubbles_uri));					
+				}
+			}
 			float y = event.values[axisChooser]; 
 			if (!mInitialized) {
 				mLastY = y;
-				String uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
-				iv.setVideoURI(Uri.parse(uri));	    //iv.setVisibility(View.VISIBLE); 
+				if(vidChooser == 0){
+					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					iv.setVideoURI(Uri.parse(banana_uri));	   
+				}
+				else if(vidChooser == 1){
+					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					iv.setVideoURI(Uri.parse(fireworks_uri));					
+				}
+				else{
+					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					iv.setVideoURI(Uri.parse(bubbles_uri));					
+				}
 				iv.start();
 				tvY.setText("0.0");
 				mInitialized = true;
@@ -271,6 +311,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				mLastY = y;
 				tvY.setText(Float.toString(deltaY)); 
 				if (deltaY > 0) {
+					
 					iv.start();
 					iv.setVisibility(View.VISIBLE); 
 					
