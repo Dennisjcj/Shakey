@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 		
 	private double MINIMUM = 0.3; 
-	private int militime = 500;   
+	private int militime = 4000;   
 	
 	long start = 0;
 	long end = 0;
@@ -96,7 +96,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final EditText min = (EditText)findViewById(R.id.editTextmin); 
 		final EditText mili = (EditText)findViewById(R.id.editTextmili);
 		min.setText("0.3");
-		mili.setText("500");
+		mili.setText("4000");
 		final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
@@ -156,11 +156,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
-				else{
+				else if(vidChooser == 2){
 					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
-				iv.start();
+				else{
+					iv.setVisibility(View.INVISIBLE);
+				}
+				if(vidChooser != 3){
+					iv.start();
+				}
 			}
 		});
 		
@@ -175,12 +180,17 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
-				else{
+				else if(vidChooser == 2){
 					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
-				iv.start();
-				iv.setVisibility(View.VISIBLE); 
+				else{
+					iv.setVisibility(View.INVISIBLE);
+				}
+				if(vidChooser != 3){
+					iv.start();
+					iv.setVisibility(View.VISIBLE); 	
+				}
 			    
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
@@ -228,6 +238,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	            break;
 	        case R.id.radiobubbles:
 	            if (checked) vidChooser = 2;
+	            break;
+	        case R.id.radionone:
+	            if (checked) vidChooser = 3;
 	            break;
 	    }
 	}
@@ -280,9 +293,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
-				else{
+				else if(vidChooser == 2){
 					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
+				}
+				else{
+					iv.setVisibility(View.INVISIBLE);
 				}
 			}
 			float y = event.values[axisChooser]; 
@@ -296,7 +312,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
-				else{
+				else if(vidChooser == 2){
 					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
@@ -311,10 +327,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				mLastY = y;
 				tvY.setText(Float.toString(deltaY)); 
 				if (deltaY > 0) {
-					
-					iv.start();
-					iv.setVisibility(View.VISIBLE); 
-					
+					if(vidChooser != 3){
+						iv.start();
+						iv.setVisibility(View.VISIBLE); 	
+					}
+				
 					musiccommand.putExtra("command", "play");
 					MainActivity.this.sendBroadcast(musiccommand);
 					start = System.nanoTime();

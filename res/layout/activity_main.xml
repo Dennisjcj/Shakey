@@ -247,6 +247,15 @@
 	                android:onClick="onVidChoose"
 	                android:text="@string/Bubbles"
 	                android:textSize="20sp" />
+	            
+	            <RadioButton
+	                android:id="@+id/radionone"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:gravity="center_vertical|center_horizontal|fill_horizontal|center|fill|start"
+	                android:onClick="onVidChoose"
+	                android:text="@string/None"
+	                android:textSize="20sp" />
 
 	        </RadioGroup>
 	        <TextView

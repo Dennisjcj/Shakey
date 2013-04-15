@@ -24,6 +24,7 @@
     <string name="Banana">Banana</string>
     <string name="Fireworks">Fireworks</string>
     <string name="Bubbles">Bubbles</string>
+    <string name="None">None</string>
     
 
 </resources>
