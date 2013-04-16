@@ -219,8 +219,27 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 
-				iv.start();
-			    iv.setVisibility(View.VISIBLE); 
+				VideoView iv = (VideoView)findViewById(R.id.video);
+				if(vidChooser == 0){
+					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					iv.setVideoURI(Uri.parse(banana_uri));	   
+				}
+				else if(vidChooser == 1){
+					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					iv.setVideoURI(Uri.parse(fireworks_uri));					
+				}
+				else if(vidChooser == 2){
+					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					iv.setVideoURI(Uri.parse(bubbles_uri));					
+				}
+				else{
+					iv.setVisibility(View.INVISIBLE);
+				}
+				if(vidChooser != 3){
+					iv.start();
+					iv.setVisibility(View.VISIBLE); 	
+				}
+			    
 
 				musiccommand.putExtra("command", "play");
 				MainActivity.this.sendBroadcast(musiccommand);
