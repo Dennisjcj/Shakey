@@ -270,8 +270,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			}
 		});	
 	}
-	
-	
 	public void onRadioButtonClicked(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
 	    switch(view.getId()) {
@@ -318,7 +316,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	            break;
 	    }
 	}
-	
 	protected void onResume() {
 		super.onResume();
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -364,15 +361,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if(vidchanged == true){
 				vidchanged = false;
 				if(vidChooser == 0){
-					//String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					//String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					//String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				else{
@@ -383,15 +377,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if (!mInitialized) {
 				mLastY = y;
 				if(vidChooser == 0){
-					//String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					//String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					//String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				iv.start();
@@ -453,35 +444,25 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);//sends the intent to OS
 		}
 	}
-	
 	public void clickPause(){
 		pause.performClick();
-		Toast.makeText(this, "Pause Function", Toast.LENGTH_SHORT);
-
 	}
 	public void clickPlay(){
 		play.performClick();
-		Toast.makeText(this, "Pause Function", Toast.LENGTH_SHORT);
-
 	}
 	public void setManual(){
 		if(autoChooser==0){
 			manAuto.check(man.getId());
 			man.performClick();
 		}
-		
 	}
 	public void setAuto(){
 		if(autoChooser == 1){
 			manAuto.check(auto.getId());
 			auto.performClick();
 		}
-
-	}
-	
-	
+	}	
 	public class RemoteControlRoutedReceiver extends BroadcastReceiver {
-
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if("com.MainActivity.Shakey.MEDIA_BUTTON".equals(intent.getAction())){
@@ -532,7 +513,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 			abortBroadcast();
 		}
-		
 	}
 }
 
