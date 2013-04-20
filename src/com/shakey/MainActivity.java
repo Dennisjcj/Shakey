@@ -89,6 +89,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private Button pause; 
 	private Button menu; 
 	
+	//video
+	private String banana_uri;
+	private String fireworks_uri;
+	private String bubbles_uri;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -144,11 +148,17 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		setUpBlueTooth();
 		mRemoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
 		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		//am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		
 		btReceiver = new RemoteControlRoutedReceiver();
 		btFilter = new IntentFilter();
 		btFilter.addAction("com.MainActivity.Shakey.MEDIA_BUTTON");
 		//endBluetoothstuff
+		
+		//videostuffz
+		banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+		fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+		bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+		//
 		
 		menu.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
@@ -196,15 +206,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
 				if(vidChooser == 0){
-					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				else{
@@ -221,15 +231,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 				VideoView iv = (VideoView)findViewById(R.id.video);
 				if(vidChooser == 0){
-					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					//String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					//String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					//String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				else{
@@ -354,15 +364,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if(vidchanged == true){
 				vidchanged = false;
 				if(vidChooser == 0){
-					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					//String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					//String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					//String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				else{
@@ -373,15 +383,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if (!mInitialized) {
 				mLastY = y;
 				if(vidChooser == 0){
-					String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
+					//String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
+					//String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+					//String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				iv.start();
