@@ -93,6 +93,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String banana_uri;
 	private String fireworks_uri;
 	private String bubbles_uri;
+	private VideoView iv;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -158,6 +159,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 		fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 		bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
+		iv = (VideoView)findViewById(R.id.video);
 		//
 		
 		menu.setOnClickListener(new View.OnClickListener(){
@@ -201,8 +203,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			}
 		});
 		
-		final VideoView iv = (VideoView)findViewById(R.id.video);
-
+		
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
 				if(vidChooser == 0){
@@ -222,24 +223,22 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 				if(vidChooser != 3){
 					iv.start();
+					playMusic();
 				}
 			}
+			
 		});
 		
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 
-				VideoView iv = (VideoView)findViewById(R.id.video);
 				if(vidChooser == 0){
-					//String banana_uri = "android.resource://" + getPackageName() + "/" + R.raw.banana;
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
 				else if(vidChooser == 1){
-					//String fireworks_uri = "android.resource://" + getPackageName() + "/" + R.raw.fireworks;
 					iv.setVideoURI(Uri.parse(fireworks_uri));					
 				}
 				else if(vidChooser == 2){
-					//String bubbles_uri = "android.resource://" + getPackageName() + "/" + R.raw.bubbles;
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
 				}
 				else{
@@ -251,16 +250,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 			    
 
-				musiccommand.putExtra("command", "play");
-				MainActivity.this.sendBroadcast(musiccommand);
-				isPlaying = 1;
-				am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+				playMusic();
 			}
 		});
 		
 		pause.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				VideoView iv = (VideoView)findViewById(R.id.video);
 				iv.pause();
 			    iv.setVisibility(View.INVISIBLE); 
 				musiccommand.putExtra("command", "pause");
@@ -332,15 +327,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
 		//bluetooth
 	}
-	/*
-	@Override
-	protected void onDestroy(){
-		am.unregisterMediaButtonEventReceiver(mRemoteControlResponder);
-		//bluetooth
-		unregisterReceiver(btReceiver);
-		//bluetooth		
-	}
-	*/
+
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
@@ -357,7 +344,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onSensorChanged(SensorEvent event) {	
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
-			VideoView iv = (VideoView)findViewById(R.id.video);
+			//VideoView iv = (VideoView)findViewById(R.id.video);
 			if(vidchanged == true){
 				vidchanged = false;
 				if(vidChooser == 0){
@@ -400,9 +387,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 						iv.start();
 						iv.setVisibility(View.VISIBLE); 	
 					}
-				
+					/*
 					musiccommand.putExtra("command", "play");
-					MainActivity.this.sendBroadcast(musiccommand);
+					MainActivity.this.sendBroadcast(musiccommand);*/
+					playMusic();
 					start = System.nanoTime();
 				}
 				else {	
@@ -462,6 +450,34 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			auto.performClick();
 		}
 	}	
+	private void playMusic(){
+		musiccommand.putExtra("command", "play");
+		MainActivity.this.sendBroadcast(musiccommand);
+		isPlaying = 1;
+		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+	}
+	private void playVideo(){
+		if(vidChooser == 0){
+			
+			iv.setVideoURI(Uri.parse(banana_uri));	   
+		}
+		else if(vidChooser == 1){
+			
+			iv.setVideoURI(Uri.parse(fireworks_uri));					
+		}
+		else if(vidChooser == 2){
+			
+			iv.setVideoURI(Uri.parse(bubbles_uri));					
+		}
+		else{
+			iv.setVisibility(View.INVISIBLE);
+		}
+		if(vidChooser != 3){
+			iv.start();
+			playMusic();
+		}
+	}
+	
 	public class RemoteControlRoutedReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
