@@ -206,25 +206,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		iv.setOnCompletionListener(new OnCompletionListener(){
 			public void onCompletion(MediaPlayer arg0) {
-				if(vidChooser == 0){
-					
-					iv.setVideoURI(Uri.parse(banana_uri));	   
-				}
-				else if(vidChooser == 1){
-					
-					iv.setVideoURI(Uri.parse(fireworks_uri));					
-				}
-				else if(vidChooser == 2){
-					
-					iv.setVideoURI(Uri.parse(bubbles_uri));					
-				}
-				else{
-					iv.setVisibility(View.INVISIBLE);
-				}
-				if(vidChooser != 3){
-					iv.start();
-					playMusic();
-				}
+				playVideo();
 			}
 			
 		});
@@ -232,25 +214,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 
-				if(vidChooser == 0){
-					iv.setVideoURI(Uri.parse(banana_uri));	   
-				}
-				else if(vidChooser == 1){
-					iv.setVideoURI(Uri.parse(fireworks_uri));					
-				}
-				else if(vidChooser == 2){
-					iv.setVideoURI(Uri.parse(bubbles_uri));					
-				}
-				else{
-					iv.setVisibility(View.INVISIBLE);
-				}
-				if(vidChooser != 3){
-					iv.start();
-					iv.setVisibility(View.VISIBLE); 	
-				}
-			    
-
-				playMusic();
+				playVideo();
+			    playMusic();
 			}
 		});
 		
@@ -344,7 +309,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onSensorChanged(SensorEvent event) {	
 		if(autoChooser == 0){
 			TextView tvY= (TextView)findViewById(R.id.y_axis);
-			//VideoView iv = (VideoView)findViewById(R.id.video);
 			if(vidchanged == true){
 				vidchanged = false;
 				if(vidChooser == 0){
@@ -361,8 +325,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 			}
 			float y = event.values[axisChooser]; 
+			
 			if (!mInitialized) {
 				mLastY = y;
+				/*
 				if(vidChooser == 0){
 					iv.setVideoURI(Uri.parse(banana_uri));	   
 				}
@@ -371,8 +337,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 				else if(vidChooser == 2){
 					iv.setVideoURI(Uri.parse(bubbles_uri));					
-				}
-				iv.start();
+				}*/
+				//iv.start();
 				tvY.setText("0.0");
 				mInitialized = true;
 			} 
@@ -383,13 +349,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				mLastY = y;
 				tvY.setText(Float.toString(deltaY)); 
 				if (deltaY > 0) {
-					if(vidChooser != 3){
-						iv.start();
-						iv.setVisibility(View.VISIBLE); 	
-					}
-					/*
-					musiccommand.putExtra("command", "play");
-					MainActivity.this.sendBroadcast(musiccommand);*/
+					playVideo();
 					playMusic();
 					start = System.nanoTime();
 				}
@@ -457,6 +417,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
 	}
 	private void playVideo(){
+		iv.setVisibility(View.VISIBLE);
 		if(vidChooser == 0){
 			
 			iv.setVideoURI(Uri.parse(banana_uri));	   
@@ -474,7 +435,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		}
 		if(vidChooser != 3){
 			iv.start();
-			playMusic();
+			//playMusic();
 		}
 	}
 	
