@@ -274,6 +274,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	            iv.setVisibility(View.INVISIBLE);
 	            break;
 	    }
+	    if(isPlaying == 1){
+	    	playMusic();
+	    }
 	}
 	
 	public void onAutochoose(View view) {
@@ -432,9 +435,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	}
 	private void playVideo(){
-		iv.setVisibility(View.VISIBLE);
 		if(vidChooser != 3){
 			if(isPlaying==0){
+				iv.setVisibility(View.VISIBLE);
 				iv.start();
 				isPlaying = 1;
 			}
