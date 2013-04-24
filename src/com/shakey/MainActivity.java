@@ -256,6 +256,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onVidChoose(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
 	    vidchanged = true;
+	    iv.setVisibility(view.VISIBLE);
 	    switch(view.getId()) {
 	        case R.id.radiobanana:
 	            if (checked) vidChooser = 0;
