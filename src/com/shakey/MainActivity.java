@@ -260,19 +260,23 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	    switch(view.getId()) {
 	        case R.id.radiobanana:
 	            if (checked) vidChooser = 0;
-	            iv.setVideoURI(Uri.parse(banana_uri));	  
+	            iv.setVideoURI(Uri.parse(banana_uri));	
+	            iv.start();
 	            break;
 	        case R.id.radiofireworks:
 	            if (checked) vidChooser = 1;
 	            iv.setVideoURI(Uri.parse(fireworks_uri));
+	            iv.start();
 	            break;
 	        case R.id.radiobubbles:
 	            if (checked) vidChooser = 2;
 	            iv.setVideoURI(Uri.parse(bubbles_uri));	
+	            iv.start();
 	            break;
 	        case R.id.radionone:
 	            if (checked) vidChooser = 3;
 	            iv.setVisibility(View.INVISIBLE);
+	            iv.start();
 	            break;
 	    }
 	    if(isPlaying == 1){
