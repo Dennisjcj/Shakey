@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private boolean mInitialized;
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
-	private int axisChooser = 0;
+	private int axisChooser = 2;
 	private int vidChooser = 1;
 	private boolean vidchanged = false;
 	private int autoChooser = 1;
@@ -112,7 +112,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
 		settings.setVisibility(View.INVISIBLE);
 
-		ax = (CompoundButton) findViewById(R.id.radiox); 
+		ax = (CompoundButton) findViewById(R.id.radioz); 
 		ax.setChecked(true);
 		
 		man = (CompoundButton) findViewById(R.id.radiomanual); 
