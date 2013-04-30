@@ -43,7 +43,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener{
