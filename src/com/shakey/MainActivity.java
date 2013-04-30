@@ -1,6 +1,14 @@
-//This is Shakey version Animated Video instead of picture; 
-//From now on, I am going to do all the development as forks from this Parent on GitHub.
-//So rather than rename the app everytime I change the code significantly, I will create a fork, and call it Shakey 1.8 and so on
+//This is Shakey.
+//This all the main code for this app is saved in this activity.
+//This application plays music and video when the accelerometer feels motion.
+//The user can designate which axis.
+//The "music" button will take the user to the native music application to choose which music to play.
+//The user can choose between 4 different videos to play.
+//The user can choose between manual mode and automatic mode.
+//The minimum force required to trigger the music and video are customizable.
+//The duration of automatic play is customizable.
+//Volume can be controlled with the onscreen slider.
+//A bluetooth remote can also control the application.
 
 package com.shakey;
 
@@ -40,17 +48,17 @@ import android.media.MediaPlayer.OnCompletionListener;
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener{
 
+	//accelerometer sensor variables
 	private float mLastY;
 	private boolean mInitialized;
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
-	private int axisChooser = 2;
-	private int vidChooser = 1;
-	private boolean vidchanged = false;
-	private int autoChooser = 1;
+	private int axisChooser = 2; //axis choice variable
+	private int vidChooser = 1; //video choice variable
+	private int autoChooser = 1; //manual vs. auto mode choice variable
 
-	private double MINIMUM = 0.3; 
-	private int militime = 4000;   
+	private double MINIMUM = 0.3; //minimum threshold force variable
+	private int militime = 4000; //time auto mode will play music in miliseconds
 	
 	//bluetooth stuff
 	private BluetoothAdapter mBluetoothAdapter;	
@@ -64,32 +72,31 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	private CompoundButton man;
 	private CompoundButton ax;
-	private CompoundButton ban;
 	private CompoundButton auto;
 	private RadioGroup manAuto;
 	
+	//timer variables
 	long start = 0;
 	long end = 0;
 	long duration = 0;
 	
 	private boolean displaysettings = false;
 
-	AudioManager am;
+	AudioManager am; //controls the music app pause and play as well as device volume
 
-	
 	Intent musiccommand = new Intent("com.android.music.musicservicecommand");
 	@SuppressWarnings("deprecation")
 	Intent openmusic = new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER);
 	double volume = 0.5;
 	
-	//buttons
+	//onscreen buttons
 	private Button enter; 
 	private Button music; 
 	private Button play; 
 	private Button pause; 
 	private Button menu; 
 	
-	//video
+	//videos
 	private String banana_uri;
 	private String fireworks_uri;
 	private String bubbles_uri;
@@ -97,13 +104,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) { //occurs when the app is first started
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main); 
-
+		//set the view activity_main.xml saved in the res/layout folder
+		setContentView(R.layout.activity_main);
+		
+		
+		//give the buttons from the layout names
 		enter = (Button) findViewById(R.id.buttonenter); 
 		music = (Button) findViewById(R.id.buttonmusic); 
 		play = (Button) findViewById(R.id.buttonplay); 
@@ -112,12 +122,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		final LinearLayout settings = (LinearLayout)findViewById(R.id.settings);
 		settings.setVisibility(View.INVISIBLE);
 
+		//set the default checks for the radio buttons
 		ax = (CompoundButton) findViewById(R.id.radioz); 
 		ax.setChecked(true);
 		
 		man = (CompoundButton) findViewById(R.id.radiomanual); 
 		man.setChecked(true);
-		
 
 		final CompoundButton fir = (CompoundButton) findViewById(R.id.radiofireworks); 
 		fir.setChecked(true);
@@ -127,7 +137,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		
 		manAuto = (RadioGroup) findViewById(R.id.manAuto);
 		
-		
+		//volume seekbar
 		SeekBar sb = (SeekBar)findViewById(R.id.seekBar1);
 		sb.setMax(100);
 		sb.setProgress(50);
@@ -138,6 +148,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);  
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);  
 		
+		//set textbox display texts
 		final EditText min = (EditText)findViewById(R.id.editTextmin); 
 		final EditText mili = (EditText)findViewById(R.id.editTextmili);
 		min.setText("0.3");
@@ -165,6 +176,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		iv.setVideoURI(Uri.parse(fireworks_uri));
 		//
 		
+		//the following set what happens when a button is clicked
 		menu.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				
@@ -255,7 +267,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	
 	public void onVidChoose(View view) {
 	    boolean checked = ((RadioButton) view).isChecked();
-	    vidchanged = true;
 	    iv.setVisibility(view.VISIBLE);
 	    switch(view.getId()) {
 	        case R.id.radiobanana:
