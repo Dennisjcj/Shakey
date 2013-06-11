@@ -149,16 +149,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 		mInitialized = false;
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mAccelerometer = mSensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mSensorManager.registerListener(this, mAccelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
-
+		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mSensorManager.registerListener(this, mAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+		
+		//Initializing config
+		//loadPref();
 		// set textbox display texts
 		final EditText min = (EditText) findViewById(R.id.editTextmin);
 		final EditText mili = (EditText) findViewById(R.id.editTextmili);
-		min.setText("0.3");
-		mili.setText("4000");
+		min.setText(Double.toString(MINIMUM));
+		mili.setText(Integer.toString(militime));
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
@@ -186,8 +186,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		iv.setVideoURI(Uri.parse(fireworks_uri));
 		//
 		
-		//Initializing config
-		loadPref();
+		
 		
 		
 		// the following set what happens when a button is clicked
@@ -507,11 +506,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	private void savePref() {
 		try {
-			FileOutputStream fos = openFileOutput("shakey.cfg",
-					Context.MODE_PRIVATE);
+			FileOutputStream fos = openFileOutput("shakey.cfg",	Context.MODE_PRIVATE);
 			String config = new String();
-			config = Double.toString(MINIMUM) + " "
-					+ Integer.toString(militime);
+			config = Double.toString(MINIMUM) + " "	+ Integer.toString(militime);
 			fos.write(config.getBytes(Charset.defaultCharset()));
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -530,12 +527,17 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			FileInputStream fis = openFileInput("shakey.cfg");
 			fis.read(config, 0, 20);
 			String configS = new String(config, Charset.defaultCharset());
+			String[] blah = configS.split(" ");
+			MINIMUM = new Double(blah[0]);
+			militime = new Integer(blah[1]);
+			fis.close();
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 	}
