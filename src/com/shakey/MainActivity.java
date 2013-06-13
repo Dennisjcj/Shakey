@@ -32,6 +32,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -153,7 +154,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		mSensorManager.registerListener(this, mAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
 		
 		//Initializing config
-		//loadPref();
+		loadPref();
 		// set textbox display texts
 		final EditText min = (EditText) findViewById(R.id.editTextmin);
 		final EditText mili = (EditText) findViewById(R.id.editTextmili);
@@ -508,7 +509,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		try {
 			FileOutputStream fos = openFileOutput("shakey.cfg",	Context.MODE_PRIVATE);
 			String config = new String();
-			config = Double.toString(MINIMUM) + " "	+ Integer.toString(militime);
+			config = Double.toString(MINIMUM) + " "	+ Integer.toString(militime) +" ";
 			fos.write(config.getBytes(Charset.defaultCharset()));
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -522,22 +523,24 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	}
 
 	private void loadPref() {
+		Log.d("Shakey", "runningLoadPref");
 		try {
-			byte[] config = new byte[20];
+			byte[] config = new byte[30];
 			FileInputStream fis = openFileInput("shakey.cfg");
-			fis.read(config, 0, 20);
+			fis.read(config, 0, 30);
 			String configS = new String(config, Charset.defaultCharset());
 			String[] blah = configS.split(" ");
-			MINIMUM = new Double(blah[0]);
-			militime = new Integer(blah[1]);
+			MINIMUM = Double.valueOf(blah[0]);
+			militime = Integer.valueOf(blah[1]);
 			fis.close();
 			
 		} catch (FileNotFoundException e) {
+			Log.d("Shakey", "FileNotFound");
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 
 	}
