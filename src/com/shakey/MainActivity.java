@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -107,6 +108,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String banana_uri;
 	private String fireworks_uri;
 	private String bubbles_uri;
+	private String customPath;
 	private VideoView iv;
 
 	@Override
@@ -182,6 +184,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				+ R.raw.fireworks;
 		bubbles_uri = "android.resource://" + getPackageName() + "/"
 				+ R.raw.bubbles;
+		customPath = "/sdcard/shakey/bubbles.mp4";
 		iv = (VideoView) findViewById(R.id.video);
 
 		iv.setVideoURI(Uri.parse(fireworks_uri));
@@ -231,12 +234,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			}
 		});
 
-		/*
-		 * iv.setOnCompletionListener(new OnCompletionListener(){ public void
-		 * onCompletion(MediaPlayer arg0) { playVideo(); }
-		 * 
-		 * });
-		 */
 		iv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
@@ -306,6 +303,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if (checked)
 				vidChooser = 3;
 			iv.setVisibility(View.INVISIBLE);
+			iv.start();
+			break;
+		case R.id.radioCustomVideo:
+			if(checked)
+				vidChooser = 4;
+			iv.setVideoPath(customPath);
 			iv.start();
 			break;
 		}
