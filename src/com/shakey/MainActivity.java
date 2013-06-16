@@ -184,7 +184,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				+ R.raw.fireworks;
 		bubbles_uri = "android.resource://" + getPackageName() + "/"
 				+ R.raw.bubbles;
-		customPath = "/sdcard/shakey/bubbles.mp4";
+		customPath = Environment.getExternalStorageDirectory().getPath()+"/shakey/bubbles.mp4";
 		iv = (VideoView) findViewById(R.id.video);
 
 		iv.setVideoURI(Uri.parse(fireworks_uri));

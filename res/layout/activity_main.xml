@@ -1,282 +1,193 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="442dp"
-	    android:gravity="center"
-	    android:orientation="vertical" >
-	
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.00"
-	        android:paddingBottom="10dp"
-	        android:paddingLeft="20dp"
-	        android:paddingRight="20dp"
-	        android:paddingTop="10dp" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="502dp"
+        android:orientation="vertical" >
 
-	        <Button
-	            android:id="@+id/buttonmusic"
-	            android:layout_width="96dp"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:text="@string/Music" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-	        <TextView
-	            android:id="@+id/textView5"
-	            android:layout_width="82dp"
-	            android:layout_height="match_parent"
-	            android:gravity="center"
-	            android:text="@string/Volume"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <Button
+                android:id="@+id/buttonmusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Music" />
 
-	        <SeekBar
-	            android:id="@+id/seekBar1"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:layout_weight="0.58"
-	            android:max="100" />
+            <RadioGroup
+                android:id="@+id/manAuto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
-	        <LinearLayout
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:paddingLeft="20dp"
-	            android:paddingRight="20dp" >
+                <RadioButton
+                    android:id="@+id/radiomanual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/Manual" />
 
-	            <Button
-	                android:id="@+id/buttonmenu"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_gravity="center"
-	                android:paddingLeft="20dp"
-	                android:paddingRight="20dp"
-	                android:text="@string/Menu" />
+                <RadioButton
+                    android:id="@+id/radioauto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Auto" />
+            </RadioGroup>
 
-	        </LinearLayout>
+            <Button
+                android:id="@+id/buttonplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Play" />
 
-	        <RadioGroup
-	            android:id="@+id/manAuto"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:layout_weight="0.00"
-	            android:gravity="center|left"
-	            android:orientation="vertical"
-	            android:paddingRight="20dp" >
+            <Button
+                android:id="@+id/buttonpause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Pause" />
 
-	            <RadioButton
-	                android:id="@+id/radiomanual"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:onClick="onAutochoose"
-	                android:text="@string/Manual"
-	                android:textSize="20sp" />
+            <Button
+                android:id="@+id/buttonmenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Menu" />
 
-	            <RadioButton
-	                android:id="@+id/radioauto"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center_vertical|center_horizontal|fill_horizontal|start"
-	                android:onClick="onAutochoose"
-	                android:text="@string/Auto"
-	                android:textSize="20sp" />
+            <SeekBar
+                android:id="@+id/seekBar1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-	        </RadioGroup>
+        </LinearLayout>
 
-	        <LinearLayout
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:layout_weight="0.00"
-	            android:orientation="vertical" >
+        <LinearLayout
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-	            <Button
-	                android:id="@+id/buttonplay"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:paddingLeft="40dp"
-	                android:paddingRight="40dp"
-	                android:text="@string/Play" />
+            <RadioGroup
+                android:id="@+id/radioGroup3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
-	            <Button
-	                android:id="@+id/buttonpause"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:paddingLeft="32dp"
-	                android:paddingRight="30dp"
-	                android:text="@string/Pause" />
+                <RadioButton
+                    android:id="@+id/radiox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:onClick="onRadioButtonClicked"
+                    android:text="@string/xaxis" />
 
-	        </LinearLayout>
+                <RadioButton
+                    android:id="@+id/radioy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onRadioButtonClicked"
+                    android:text="@string/yaxis" />
 
-	    </LinearLayout>
-	    
-	    <LinearLayout
-	        android:id="@+id/settings"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center|left"
-	        android:paddingBottom="10dp"
-	        android:paddingLeft="20dp"
-	        android:paddingRight="20dp"
-	        android:paddingTop="10dp" >
+                <RadioButton
+                    android:id="@+id/radioz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onRadioButtonClicked"
+                    android:text="@string/zaxis" />
+            </RadioGroup>
 
-	        <RadioGroup
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0.00"
-	            android:gravity="center"
-	            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-	            <RadioButton
-	                android:id="@+id/radiox"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:onClick="onRadioButtonClicked"
-	                android:text="@string/xaxis"
-	                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/min"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	            <RadioButton
-	                android:id="@+id/radioy"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center_vertical|center_horizontal|fill_horizontal|start"
-	                android:onClick="onRadioButtonClicked"
-	                android:text="@string/yaxis"
-	                android:textSize="20sp" />
+                <EditText
+                    android:id="@+id/editTextmin"
+                    android:layout_width="166dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" >
 
-	            <RadioButton
-	                android:id="@+id/radioz"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center_vertical|center_horizontal|fill_horizontal|center|fill|start"
-	                android:onClick="onRadioButtonClicked"
-	                android:text="@string/zaxis"
-	                android:textSize="20sp" />
+                    <requestFocus />
+                </EditText>
 
-	        </RadioGroup>
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mili"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	        <LinearLayout
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical"
-	            android:paddingLeft="20dp" >
+                <EditText
+                    android:id="@+id/editTextmili"
+                    android:layout_width="167dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="number" />
 
-	            <TextView
-	                android:id="@+id/textView1"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center"
-	                android:text="@string/min"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/y_axis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+	            	android:textIsSelectable="true" />
 
-	            <EditText
-	                android:id="@+id/editTextmin"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:ems="10"
-	                android:inputType="numberDecimal" />
-	        </LinearLayout>
+            </LinearLayout>
 
-	        <LinearLayout
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical"
-	            android:paddingRight="20dp" >
+            <Button
+                android:id="@+id/buttonenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enter" />
 
-	            <TextView
-	                android:id="@+id/textView2"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center"
-	                android:text="@string/mili"
-	                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <RadioGroup
+                android:id="@+id/radioGroup4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
-	            <EditText
-	                android:id="@+id/editTextmili"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:ems="10"
-	                android:inputType="number" >
+                <RadioButton
+                    android:id="@+id/radiobanana"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onVidChoose"
+                    android:text="@string/Banana" />
 
-	                <requestFocus />
-	            </EditText>
-	        </LinearLayout>
+                <RadioButton
+                    android:id="@+id/radiofireworks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onVidChoose"
+                    android:text="@string/Fireworks" />
 
-	        <Button
-	            android:id="@+id/buttonenter"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:paddingLeft="50dp"
-	            android:paddingRight="50dp"
-	            android:text="@string/enter" />
-	        
-	        <RadioGroup
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0.00"
-	            android:gravity="center|left"
-	            android:orientation="vertical"
-	            android:paddingLeft="10dp" >
+                <RadioButton
+                    android:id="@+id/radiobubbles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onVidChoose"
+                    android:text="@string/Bubbles" />
 
-	            <RadioButton
-	                android:id="@+id/radiobanana"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:onClick="onVidChoose"
-	                android:text="@string/Banana"
-	                android:textSize="20sp" />
+                <RadioButton
+                    android:id="@+id/radioCustomVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onVidChoose"
+                    android:text="@string/customVideo" />
 
-	            <RadioButton
-	                android:id="@+id/radiofireworks"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center_vertical|center_horizontal|fill_horizontal|start"
-	                android:onClick="onVidChoose"
-	                android:text="@string/Fireworks"
-	                android:textSize="20sp" />
-
-	            <RadioButton
-	                android:id="@+id/radiobubbles"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center_vertical|center_horizontal|fill_horizontal|center|fill|start"
-	                android:onClick="onVidChoose"
-	                android:text="@string/Bubbles"
-	                android:textSize="20sp" />
-
-	            <RadioButton
-	                android:id="@+id/radioCustomVideo"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="@string/customVideo" />
-	            
-	            <RadioButton
-	                android:id="@+id/radionone"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:gravity="center_vertical|center_horizontal|fill_horizontal|center|fill|start"
-	                android:onClick="onVidChoose"
-	                android:text="@string/None"
-	                android:textSize="20sp" />
-
-	        </RadioGroup>
-	        <TextView
-	            android:id="@+id/y_axis"
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:gravity="center"
-	            android:paddingLeft="20dp"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textIsSelectable="true" />
-
-	    </LinearLayout>
-
-	
-	    <VideoView
+                <RadioButton
+                    android:id="@+id/radionone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onVidChoose"
+                    android:text="@string/None" />
+            </RadioGroup>
+        </LinearLayout>
+        <VideoView
 	        android:id="@+id/video"
 	        android:layout_width="fill_parent"
 	        android:layout_height="500dip"
@@ -284,6 +195,8 @@
 	        android:contentDescription="@string/face"
 	        android:paddingTop="10dip"
 	        android:visibility="invisible" />
-	
-	</LinearLayout>
+
+
+    </LinearLayout>
+
 </ScrollView>
