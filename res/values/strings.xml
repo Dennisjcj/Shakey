@@ -26,6 +26,7 @@
     <string name="Bubbles">Bubbles</string>
     <string name="None">None</string>
     <string name="customVideo">Custom</string>
+    <string name="customVideoName">Custom Video File Name</string>
     
 
 </resources>

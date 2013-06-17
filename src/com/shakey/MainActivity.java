@@ -66,6 +66,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private double MINIMUM = 0.3; // minimum threshold force variable
 	private int militime = 4000; // time auto mode will play music in
 									// miliseconds
+	private String customVidName = new String();
 
 	// bluetooth stuff
 	private BluetoothAdapter mBluetoothAdapter;
@@ -110,6 +111,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String bubbles_uri;
 	private String customPath;
 	private VideoView iv;
+	
+	private EditText videoName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) { // occurs when the app is
@@ -160,13 +163,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		// set textbox display texts
 		final EditText min = (EditText) findViewById(R.id.editTextmin);
 		final EditText mili = (EditText) findViewById(R.id.editTextmili);
+		videoName = (EditText) findViewById(R.id.videoName);
 		min.setText(Double.toString(MINIMUM));
 		mili.setText(Integer.toString(militime));
+		videoName.setText(customVidName);
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 		imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
 
 		// BluetoothSetup
+		
 		setUpBlueTooth();
 		mRemoteControlResponder = new ComponentName(getPackageName(),
 				RemoteControlReceiver.class.getName());
@@ -175,6 +181,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		btReceiver = new RemoteControlRoutedReceiver();
 		btFilter = new IntentFilter();
 		btFilter.addAction("com.MainActivity.Shakey.MEDIA_BUTTON");
+		
 		// endBluetoothstuff
 
 		// videostuffz
@@ -184,15 +191,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				+ R.raw.fireworks;
 		bubbles_uri = "android.resource://" + getPackageName() + "/"
 				+ R.raw.bubbles;
-		customPath = Environment.getExternalStorageDirectory().getPath()+"/shakey/bubbles.mp4";
+		customPath = new String();
 		iv = (VideoView) findViewById(R.id.video);
 
 		iv.setVideoURI(Uri.parse(fireworks_uri));
 		//
 		
-		
-		
-		
+
 		// the following set what happens when a button is clicked
 		menu.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -208,6 +213,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		});
 		enter.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				customVidName = videoName.getText().toString(); 
+				
 				imm.hideSoftInputFromWindow(mili.getWindowToken(), 0);
 				imm.hideSoftInputFromWindow(min.getWindowToken(), 0);
 				String minstring = min.getText().toString();
@@ -224,7 +231,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				} else {
 					militime = 1;
 				}
-				
+				customPath = Environment.getExternalStorageDirectory().getPath()+"/shakey/" + customVidName;
 				savePref();
 			}
 		});
@@ -285,31 +292,31 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if (checked)
 				vidChooser = 0;
 			iv.setVideoURI(Uri.parse(banana_uri));
-			iv.start();
+			//iv.start();
 			break;
 		case R.id.radiofireworks:
 			if (checked)
 				vidChooser = 1;
 			iv.setVideoURI(Uri.parse(fireworks_uri));
-			iv.start();
+			//iv.start();
 			break;
 		case R.id.radiobubbles:
 			if (checked)
 				vidChooser = 2;
 			iv.setVideoURI(Uri.parse(bubbles_uri));
-			iv.start();
+			//iv.start();
 			break;
 		case R.id.radionone:
 			if (checked)
 				vidChooser = 3;
 			iv.setVisibility(View.INVISIBLE);
-			iv.start();
+			//iv.start();
 			break;
 		case R.id.radioCustomVideo:
 			if(checked)
 				vidChooser = 4;
 			iv.setVideoPath(customPath);
-			iv.start();
+			//iv.start();
 			break;
 		}
 		if (isPlaying == 1) {
@@ -368,27 +375,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	public void onSensorChanged(SensorEvent event) {
 		if (autoChooser == 0) {
 			TextView tvY = (TextView) findViewById(R.id.y_axis);
-			/*
-			 * if(vidchanged == true){ vidchanged = false; if(vidChooser == 0){
-			 * iv.setVideoURI(Uri.parse(banana_uri)); } else if(vidChooser ==
-			 * 1){ iv.setVideoURI(Uri.parse(fireworks_uri)); } else
-			 * if(vidChooser == 2){ iv.setVideoURI(Uri.parse(bubbles_uri)); }
-			 * else{ iv.setVisibility(View.INVISIBLE); }
-			 * 
-			 * }
-			 */
+
 			float y = event.values[axisChooser];
 
 			if (!mInitialized) {
 				mLastY = y;
-				/*
-				 * if(vidChooser == 0){ iv.setVideoURI(Uri.parse(banana_uri)); }
-				 * else if(vidChooser == 1){
-				 * iv.setVideoURI(Uri.parse(fireworks_uri)); } else
-				 * if(vidChooser == 2){ iv.setVideoURI(Uri.parse(bubbles_uri));
-				 * }
-				 */
-				// iv.start();
+
 				tvY.setText("0.0");
 				mInitialized = true;
 			} else {
@@ -512,7 +504,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		try {
 			FileOutputStream fos = openFileOutput("shakey.cfg",	Context.MODE_PRIVATE);
 			String config = new String();
-			config = Double.toString(MINIMUM) + " "	+ Integer.toString(militime) +" ";
+			config = Double.toString(MINIMUM) + " "	+ Integer.toString(militime) +" "+customVidName+" ";
 			fos.write(config.getBytes(Charset.defaultCharset()));
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -535,6 +527,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			String[] blah = configS.split(" ");
 			MINIMUM = Double.valueOf(blah[0]);
 			militime = Integer.valueOf(blah[1]);
+			customVidName = blah[2];
 			fis.close();
 			
 		} catch (FileNotFoundException e) {

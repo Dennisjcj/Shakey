@@ -28,12 +28,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:onClick="onAutochoose"
                     android:text="@string/Manual" />
 
                 <RadioButton
                     android:id="@+id/radioauto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onAutochoose"
                     android:text="@string/Auto" />
             </RadioGroup>
 
@@ -140,12 +142,6 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonenter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/enter" />
-
             <RadioGroup
                 android:id="@+id/radioGroup4"
                 android:layout_width="wrap_content"
@@ -186,6 +182,32 @@
                     android:onClick="onVidChoose"
                     android:text="@string/None" />
             </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/customVideoName" />
+
+                <EditText
+                    android:id="@+id/videoName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enter" />
+
         </LinearLayout>
         <VideoView
 	        android:id="@+id/video"
