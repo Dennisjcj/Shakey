@@ -51,6 +51,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 
 public class MainActivity extends Activity implements SensorEventListener, OnSeekBarChangeListener {
 
@@ -111,6 +112,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String bubbles_uri;
 	private String customPath;
 	private VideoView iv;
+	private int videoPosition;
 	
 	private EditText videoName;
 
@@ -195,7 +197,21 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		iv = (VideoView) findViewById(R.id.video);
 
 		iv.setVideoURI(Uri.parse(fireworks_uri));
-		//
+		videoPosition = 0;
+		/*
+		iv.setOnPreparedListener(new OnPreparedListener(){
+			public void onPrepared(MediaPlayer mp) {
+				mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener(){
+					public void onSeekComplete(MediaPlayer arg0) {
+						// TODO Auto-generated method stub
+						arg0.start();
+						Log.d("Shakey", "videoPosition: " + iv.getCurrentPosition());
+					}
+					
+				});
+			}
+		});
+		*/
 		
 
 		// the following set what happens when a button is clicked
@@ -233,6 +249,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				}
 				customPath = Environment.getExternalStorageDirectory().getPath()+"/shakey/" + customVidName;
 				savePref();
+				Log.d("Shakey", "canPause: " +iv.canPause());
+				Log.d("Shakey", "canSeekBackward: "+iv.canSeekBackward());
+				Log.d("Shakey", "canSeekForward: " + iv.canSeekForward());
 			}
 		});
 		music.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +264,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			@Override
 			public void onPrepared(MediaPlayer mp) {
 				mp.setLooping(true);
+				mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener(){
+					@Override
+					public void onSeekComplete(MediaPlayer mp) {
+						iv.start();
+						
+					}
+					
+				});
 				// mp.setPause
 			}
 		});
@@ -292,31 +319,31 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if (checked)
 				vidChooser = 0;
 			iv.setVideoURI(Uri.parse(banana_uri));
-			//iv.start();
+			videoPosition = 0;
 			break;
 		case R.id.radiofireworks:
 			if (checked)
 				vidChooser = 1;
 			iv.setVideoURI(Uri.parse(fireworks_uri));
-			//iv.start();
+			videoPosition = 0;
 			break;
 		case R.id.radiobubbles:
 			if (checked)
 				vidChooser = 2;
 			iv.setVideoURI(Uri.parse(bubbles_uri));
-			//iv.start();
+			videoPosition = 0;
 			break;
 		case R.id.radionone:
 			if (checked)
 				vidChooser = 3;
 			iv.setVisibility(View.INVISIBLE);
-			//iv.start();
+			videoPosition = 0;
 			break;
 		case R.id.radioCustomVideo:
 			if(checked)
 				vidChooser = 4;
 			iv.setVideoPath(customPath);
-			//iv.start();
+			videoPosition = 0;
 			break;
 		}
 		if (isPlaying == 1) {
@@ -479,6 +506,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 		if (vidChooser != 3) {
 			if (isPlaying == 0) {
 				iv.setVisibility(View.VISIBLE);
+				if(videoPosition == 0){
+					iv.start();
+				}
+				else{
+					iv.seekTo(videoPosition);
+				}
 				iv.start();
 				isPlaying = 1;
 			}
@@ -487,6 +520,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	private void pauseVideo() {
 		if (isPlaying == 1) {
+			videoPosition = iv.getCurrentPosition();
 			iv.pause();
 			iv.setVisibility(View.INVISIBLE);
 			isPlaying = 0;
@@ -549,7 +583,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				Bundle extras = intent.getExtras();
 				int keyType = extras.getInt("keyType");
 				String msg = "";
-
 				switch (keyType) {
 				case KeyEvent.KEYCODE_MEDIA_CLOSE:
 					msg = "CLOSE";
