@@ -45,7 +45,7 @@ public final class R {
         public static final int transparent=0x7f08001d;
         public static final int video=0x7f08001c;
         public static final int videoName=0x7f080019;
-        public static final int viewSitcher=0x7f08001b;
+        public static final int viewFlipper=0x7f08001b;
         public static final int y_axis=0x7f080011;
     }
     public static final class layout {

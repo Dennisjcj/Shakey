@@ -49,6 +49,7 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -113,7 +114,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String bubbles_uri;
 	private String customPath;
 	private VideoView iv;
-	private ViewSwitcher vS;
+	private ViewFlipper vF;
 	
 	private EditText videoName;
 
@@ -196,7 +197,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				+ R.raw.bubbles;
 		customPath = new String();
 		iv = (VideoView) findViewById(R.id.video);
-		vS = (ViewSwitcher) findViewById(R.id.viewSitcher);
+		vF = (ViewFlipper) findViewById(R.id.viewFlipper);
+		vF.setDisplayedChild(1);
 		iv.setVideoURI(Uri.parse(fireworks_uri));
 		
 		/*
@@ -422,8 +424,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 					duration = end - start;
 					if (duration / 1000000 > militime) {
 						pauseVideo();
-						iv.setVisibility(View.INVISIBLE);
-
 						pauseMusic();
 					}
 				}
@@ -501,7 +501,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private void playVideo() {
 		if (vidChooser != 3) {
 			if (isPlaying == 0) {
-				vS.setDisplayedChild(0);
+				vF.showPrevious();
 				iv.start();
 			}
 		}
@@ -510,7 +510,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private void pauseVideo() {
 		if (isPlaying == 1) {
 			iv.pause();
-			//vS.setDisplayedChild(1);
+			vF.showNext();
 			isPlaying = 0;
 		}
 	}

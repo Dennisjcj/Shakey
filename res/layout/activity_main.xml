@@ -209,8 +209,8 @@
                 android:text="@string/enter" />
 
         </LinearLayout>
-        <ViewSwitcher
-            android:id="@+id/viewSitcher"
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
             android:layout_width="fill_parent"
             android:layout_height="500dip"
             android:layout_gravity="center"
@@ -231,7 +231,7 @@
 		        android:layout_gravity="center"
 		        android:paddingTop="10dip"
 		        android:visibility="visible"/>
-	      </ViewSwitcher>
+	      </ViewFlipper>
 
 
     </LinearLayout>
