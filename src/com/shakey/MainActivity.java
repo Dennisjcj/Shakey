@@ -49,6 +49,7 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -112,7 +113,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String bubbles_uri;
 	private String customPath;
 	private VideoView iv;
-	private int videoPosition;
+	private ViewSwitcher vS;
 	
 	private EditText videoName;
 
@@ -195,9 +196,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				+ R.raw.bubbles;
 		customPath = new String();
 		iv = (VideoView) findViewById(R.id.video);
-
+		vS = (ViewSwitcher) findViewById(R.id.viewSitcher);
 		iv.setVideoURI(Uri.parse(fireworks_uri));
-		videoPosition = 0;
+		
 		/*
 		iv.setOnPreparedListener(new OnPreparedListener(){
 			public void onPrepared(MediaPlayer mp) {
@@ -319,38 +320,33 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 			if (checked)
 				vidChooser = 0;
 			iv.setVideoURI(Uri.parse(banana_uri));
-			videoPosition = 0;
 			break;
 		case R.id.radiofireworks:
 			if (checked)
 				vidChooser = 1;
 			iv.setVideoURI(Uri.parse(fireworks_uri));
-			videoPosition = 0;
 			break;
 		case R.id.radiobubbles:
 			if (checked)
 				vidChooser = 2;
 			iv.setVideoURI(Uri.parse(bubbles_uri));
-			videoPosition = 0;
 			break;
 		case R.id.radionone:
 			if (checked)
 				vidChooser = 3;
 			iv.setVisibility(View.INVISIBLE);
-			videoPosition = 0;
 			break;
 		case R.id.radioCustomVideo:
 			if(checked)
 				vidChooser = 4;
 			iv.setVideoPath(customPath);
-			videoPosition = 0;
 			break;
 		}
 		if (isPlaying == 1) {
 			playMusic();
 		}
 	}
-
+	
 	public void onAutochoose(View view) {
 		mInitialized = false;
 		boolean checked = ((RadioButton) view).isChecked();
@@ -505,24 +501,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private void playVideo() {
 		if (vidChooser != 3) {
 			if (isPlaying == 0) {
-				iv.setVisibility(View.VISIBLE);
-				if(videoPosition == 0){
-					iv.start();
-				}
-				else{
-					iv.seekTo(videoPosition);
-				}
+				vS.setDisplayedChild(0);
 				iv.start();
-				isPlaying = 1;
 			}
 		}
 	}
 
 	private void pauseVideo() {
 		if (isPlaying == 1) {
-			videoPosition = iv.getCurrentPosition();
 			iv.pause();
-			iv.setVisibility(View.INVISIBLE);
+			//vS.setDisplayedChild(1);
 			isPlaying = 0;
 		}
 	}

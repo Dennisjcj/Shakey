@@ -209,14 +209,29 @@
                 android:text="@string/enter" />
 
         </LinearLayout>
-        <VideoView
-	        android:id="@+id/video"
-	        android:layout_width="fill_parent"
-	        android:layout_height="500dip"
-	        android:layout_gravity="center"
-	        android:contentDescription="@string/face"
-	        android:paddingTop="10dip"
-	        android:visibility="invisible" />
+        <ViewSwitcher
+            android:id="@+id/viewSitcher"
+            android:layout_width="fill_parent"
+            android:layout_height="500dip"
+            android:layout_gravity="center"
+            android:paddingTop="10dip"
+            android:visibility="visible">
+	        <VideoView
+		        android:id="@+id/video"
+		        android:layout_width="fill_parent"
+		        android:layout_height="500dip"
+		        android:layout_gravity="center"
+		        android:contentDescription="@string/face"
+		        android:paddingTop="10dip"
+		        android:visibility="visible" />
+	        <View
+	            android:id="@+id/transparent"
+	            android:layout_width="fill_parent"
+	            android:layout_height="500dip"
+		        android:layout_gravity="center"
+		        android:paddingTop="10dip"
+		        android:visibility="visible"/>
+	      </ViewSwitcher>
 
 
     </LinearLayout>
