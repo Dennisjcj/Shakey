@@ -23,7 +23,7 @@ public final class R {
         public static final int editTextmili=0x7f080010;
         public static final int editTextmin=0x7f08000e;
         public static final int manAuto=0x7f080001;
-        public static final int menu_settings=0x7f08001f;
+        public static final int menu_settings=0x7f08001d;
         public static final int radioCustomVideo=0x7f080016;
         public static final int radioGroup3=0x7f080009;
         public static final int radioGroup4=0x7f080012;
@@ -41,11 +41,9 @@ public final class R {
         public static final int textView1=0x7f08000d;
         public static final int textView2=0x7f08000f;
         public static final int textView3=0x7f080018;
-        public static final int textView5=0x7f08001e;
-        public static final int transparent=0x7f08001d;
-        public static final int video=0x7f08001c;
+        public static final int textView5=0x7f08001c;
+        public static final int video=0x7f08001b;
         public static final int videoName=0x7f080019;
-        public static final int viewFlipper=0x7f08001b;
         public static final int y_axis=0x7f080011;
     }
     public static final class layout {

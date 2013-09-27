@@ -114,8 +114,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private String bubbles_uri;
 	private String customPath;
 	private VideoView iv;
-	private ViewFlipper vF;
-	
 	private EditText videoName;
 
 	@Override
@@ -197,8 +195,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				+ R.raw.bubbles;
 		customPath = new String();
 		iv = (VideoView) findViewById(R.id.video);
-		vF = (ViewFlipper) findViewById(R.id.viewFlipper);
-		vF.setDisplayedChild(1);
 		iv.setVideoURI(Uri.parse(fireworks_uri));
 		
 		/*
@@ -416,15 +412,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 				mLastY = y;
 				tvY.setText(Float.toString(deltaY));
 				if (deltaY > 0) {
-					playVideo();
-					playMusic();
+					clickPlay();
 					start = System.nanoTime();
 				} else {
 					end = System.nanoTime();
 					duration = end - start;
 					if (duration / 1000000 > militime) {
-						pauseVideo();
-						pauseMusic();
+						clickPause();
 					}
 				}
 			}
@@ -469,6 +463,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 
 	public void clickPause() {
 		pause.performClick();
+		Log.d("Shakey", "clickPause");
 	}
 
 	public void clickPlay() {
@@ -490,18 +485,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	}
 
 	private void playMusic() {
-
-		musiccommand.putExtra("command", "play");
-		MainActivity.this.sendBroadcast(musiccommand);
-		isPlaying = 1;
-		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
-
+		if(isPlaying==0){
+			musiccommand.putExtra("command", "play");
+			MainActivity.this.sendBroadcast(musiccommand);
+			isPlaying = 1;
+			am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		}
 	}
 
 	private void playVideo() {
 		if (vidChooser != 3) {
 			if (isPlaying == 0) {
-				vF.showPrevious();
+				iv.setAlpha(1);
 				iv.start();
 			}
 		}
@@ -510,16 +505,17 @@ public class MainActivity extends Activity implements SensorEventListener, OnSee
 	private void pauseVideo() {
 		if (isPlaying == 1) {
 			iv.pause();
-			vF.showNext();
-			isPlaying = 0;
+			iv.setAlpha(0);
 		}
 	}
 
 	private void pauseMusic() {
-		musiccommand.putExtra("command", "pause");
-		MainActivity.this.sendBroadcast(musiccommand);
-		isPlaying = 0;
-		am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		if(isPlaying ==1){
+			musiccommand.putExtra("command", "pause");
+			MainActivity.this.sendBroadcast(musiccommand);
+			isPlaying = 0;
+			am.registerMediaButtonEventReceiver(mRemoteControlResponder);
+		}
 	}
 
 	private void savePref() {
